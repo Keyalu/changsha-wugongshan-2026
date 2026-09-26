@@ -142,6 +142,24 @@
   .t-title{font-weight:700;}
   .t-detail{color:var(--sub);font-size:13px;margin-top:2px;}
   .t-detail b{color:var(--ink);}
+  .acts{position:absolute;right:0;top:12px;display:flex;gap:4px;opacity:.45;}
+  ul.tl li:hover .acts,.acts:hover{opacity:1;}
+  .acts button{border:1px solid var(--line);background:#fff;border-radius:5px;font-size:11px;padding:1px 7px;color:var(--sub);cursor:pointer;font-family:inherit;}
+  .acts button:hover{color:var(--red);border-color:var(--red);background:var(--red-soft);}
+  .plan-actions{display:flex;gap:8px;margin-top:12px;align-items:center;}
+  .plan-actions button{border:1px solid var(--line);background:#fff;border-radius:7px;padding:4px 12px;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer;font-family:inherit;}
+  .plan-actions button:hover{color:var(--orange-deep);border-color:#bcd6c6;background:var(--orange-soft);}
+  .pform{background:#f8f9fa;border:1px dashed #bcd6c6;border-radius:8px;padding:10px 12px;margin:8px 0 8px 12px;}
+  .pform .row{display:flex;gap:8px;margin-bottom:6px;align-items:center;}
+  .pform input,.pform textarea,.pform select{border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:13px;font-family:inherit;color:var(--ink);background:#fff;}
+  .pform input{flex:1;}
+  .pform .tm{max-width:130px;flex:0 0 auto;}
+  .pform select{max-width:110px;}
+  .pform textarea{width:100%;margin-bottom:6px;}
+  .pform .pbtns{display:flex;gap:8px;margin-left:auto;}
+  .pform .pbtns button{border:0;border-radius:7px;padding:4px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .pform .save{background:var(--orange-soft);color:var(--orange-deep);border:1px solid #bcd6c6;}
+  .pform .cancel{background:#eef1f4;color:var(--sub);}
   .mini-card{background:#f8f9fa;border:1px solid var(--line);border-radius:8px;padding:11px 14px;margin-top:12px;font-size:13px;}
   .mini-card .mc-title{font-weight:800;font-size:13px;margin-bottom:3px;}
   .mini-card a{color:var(--teal);font-weight:600;text-decoration:none;border-bottom:1px dotted;}
@@ -366,7 +384,7 @@
   <div class="day-panel on" id="dpanel-d1">
     <div class="card">
       <div class="day-head"><h3>10/3(六) 落地 → 入住河西</h3><span class="stay">乎然民宿 · 第1晚</span></div>
-      <ul class="tl">
+      <ul class="tl" id="tl-d1">
         <li><span class="t-time">晚上</span><span class="t-title">抵达长沙</span>
           <div class="t-detail"><b>高铁到长沙南</b>:地铁2号线→迎宾路口换6号线→六沟垅(约50分钟),打车约35分钟。<b>飞机到黄花机场</b>:磁浮→长沙南再照走,打车约50–60分钟。</div>
         </li>
@@ -377,6 +395,7 @@
           <div class="t-detail">江边夜宵街:小龙虾、烧烤配湘江夜景,吃饱早睡。</div>
         </li>
       </ul>
+      <div class="plan-actions"><button data-pact="add" data-dk="d1">+ 添加一项</button><button data-pact="reset" data-dk="d1">恢复默认</button><span class="hint" style="margin:0;">改动只保存在本设备</span></div>
       <div class="mini-card">
         <div class="mc-title">住宿信息|乎然民宿河西店(10/3–10/4 两晚 · 已订)</div>
         岳麓区银盆岭街道保利天禧E4栋31层 3131 · ☎ <a href="tel:19186963252">19186963252</a> ·
@@ -389,7 +408,7 @@
   <div class="day-panel" id="dpanel-d2">
     <div class="card">
       <div class="day-head"><h3>10/4(日) 橘子洲 + 大学城 + 后湖</h3><span class="stay">乎然民宿 · 第2晚</span></div>
-      <ul class="tl">
+      <ul class="tl" id="tl-d2">
         <li><span class="t-time">08:00</span><span class="t-title">早餐</span><div class="t-detail">嗦一碗长沙米粉出发。</div></li>
         <li><span class="t-time">09:00</span><span class="t-title">橘子洲</span>
           <div class="t-detail">地铁2号线<b>橘子洲站</b>直达,凭身份证/预约码入园。<b>观光小火车 40 元往返</b>建议买。打卡青年毛泽东雕像、洲头。</div>
@@ -406,13 +425,14 @@
         </li>
         <li><span class="t-time">21:30</span><span class="t-title">回酒店,收拾夜爬背包</span><div class="t-detail">打车约15分钟;对照「夜爬专区」清装备,早睡。</div></li>
       </ul>
+      <div class="plan-actions"><button data-pact="add" data-dk="d2">+ 添加一项</button><button data-pact="reset" data-dk="d2">恢复默认</button><span class="hint" style="margin:0;">改动只保存在本设备</span></div>
     </div>
   </div>
 
   <div class="day-panel" id="dpanel-d3">
     <div class="card">
       <div class="day-head"><h3>10/5(一) 省博 → 萍乡 → 夜爬武功山</h3><span class="stay">归屿民宿(山下)</span></div>
-      <ul class="tl">
+      <ul class="tl" id="tl-d3">
         <li><span class="t-time">08:30</span><span class="t-title">退房,行李随身</span>
           <div class="t-detail">行李<b>寄存省博寄存处</b>(以馆内公告为准),出馆取行李直奔高铁站。</div>
         </li>
@@ -436,6 +456,7 @@
           <div class="t-detail">5–6小时登顶,凌晨3:30–4:30到金顶。细节见「夜爬专区」。</div>
         </li>
       </ul>
+      <div class="plan-actions"><button data-pact="add" data-dk="d3">+ 添加一项</button><button data-pact="reset" data-dk="d3">恢复默认</button><span class="hint" style="margin:0;">改动只保存在本设备</span></div>
       <div class="mini-card">
         <div class="mc-title">住宿信息|归屿民宿(10/5 晚 · 已订 · 放行李+下山休整)</div>
         芦溪县芦万武旅游公路蔡家村杨家8组 · ☎ <a href="tel:15798067638">15798067638</a> ·
@@ -448,7 +469,7 @@
   <div class="day-panel" id="dpanel-d4">
     <div class="card">
       <div class="day-head"><h3>10/6(二) 日出 → 下山 → 回长沙 → 足浴</h3><span class="stay">足浴店过夜(待订)</span></div>
-      <ul class="tl">
+      <ul class="tl" id="tl-d4">
         <li class="warn"><span class="t-time">03:30–04:30</span><span class="t-title">金顶占位</span>
           <div class="t-detail">夜里 <b>5–10℃+大风</b>,租军大衣(约¥30–50)或穿厚外套,找背风处。</div>
         </li>
@@ -464,6 +485,7 @@
           <div class="t-detail">足浴 100–200 元/人,加约 30 元大厅过夜;或选含三餐+过夜套票(约139元/位)。<b>睡前把所有设备充满电</b>。</div>
         </li>
       </ul>
+      <div class="plan-actions"><button data-pact="add" data-dk="d4">+ 添加一项</button><button data-pact="reset" data-dk="d4">恢复默认</button><span class="hint" style="margin:0;">改动只保存在本设备</span></div>
       <div class="mini-card">
         <div class="mc-title">足浴店怎么挑(10/6 晚 · 未订)</div>
         ① <b>金色印象</b>:网红「足浴+炫饭」过夜模式;② <b>碧海云天</b>:约139元/位含洗浴+三餐+24h过夜;③ <b>汤乐泉</b>:大型日韩式汤泉,体验最好但离南站稍远(地铁可达)。<br>
@@ -475,7 +497,7 @@
   <div class="day-panel" id="dpanel-d5">
     <div class="card">
       <div class="day-head"><h3>10/7(三) 收拾 → 高铁返程</h3><span class="stay">长沙南出发</span></div>
-      <ul class="tl">
+      <ul class="tl" id="tl-d5">
         <li><span class="t-time">上午</span><span class="t-title">收拾退房</span>
           <div class="t-detail">足浴店一般<b>中午12点前退</b>,行李寄存前台;顺便备份这几天照片。</div>
         </li>
@@ -486,6 +508,7 @@
           <div class="t-detail">地铁2号线约30–40分钟,<b>提前1小时到站</b>,下午高铁回家。</div>
         </li>
       </ul>
+      <div class="plan-actions"><button data-pact="add" data-dk="d5">+ 添加一项</button><button data-pact="reset" data-dk="d5">恢复默认</button><span class="hint" style="margin:0;">改动只保存在本设备</span></div>
     </div>
   </div>
 </section>
@@ -1025,6 +1048,92 @@ function setLayer(sat){
   if(sat){if(!satLayer){satLayer=new AMap.TileLayer.Satellite();}mapObj.add(satLayer);}
   else if(satLayer){mapObj.remove(satLayer);}
 }
+
+/* ---- 行程自定义(添加/编辑/删除) ---- */
+var PLAN_DEFAULT=null,planState=null,planEdit=null;
+function parseDefaultPlan(){
+  var P={};
+  ['d1','d2','d3','d4','d5'].forEach(function(dk){
+    P[dk]=[];
+    document.querySelectorAll('#tl-'+dk+' > li').forEach(function(li){
+      if(li.querySelector('.pform'))return;
+      P[dk].push({
+        time:li.querySelector('.t-time')?li.querySelector('.t-time').textContent:'',
+        title:li.querySelector('.t-title')?li.querySelector('.t-title').innerHTML:'',
+        detail:li.querySelector('.t-detail')?li.querySelector('.t-detail').innerHTML:'',
+        cls:li.classList.contains('mile')?'mile':(li.classList.contains('warn')?'warn':'')
+      });
+    });
+  });
+  return P;
+}
+function loadPlanState(){
+  PLAN_DEFAULT=parseDefaultPlan();
+  try{
+    var s=localStorage.getItem('cs_trip_plan');
+    if(s){var p=JSON.parse(s);planState=(p&&p.d1)?p:JSON.parse(JSON.stringify(PLAN_DEFAULT));}
+    else planState=JSON.parse(JSON.stringify(PLAN_DEFAULT));
+  }catch(e){planState=JSON.parse(JSON.stringify(PLAN_DEFAULT));}
+}
+function savePlanState(){try{localStorage.setItem('cs_trip_plan',JSON.stringify(planState));}catch(e){}}
+function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function formHTML(dk,i,it){
+  return '<li><div class="pform">'
+    +'<div class="row"><input class="tm" id="pf-time" placeholder="时间,如 09:30" value="'+escH(it.time||'')+'"><input id="pf-title" placeholder="做什么" value="'+escH(it.title||'')+'"></div>'
+    +'<textarea id="pf-detail" rows="2" placeholder="细节,可留空;用 <b></b> 可以加粗">'+escH(it.detail||'')+'</textarea>'
+    +'<div class="row"><select id="pf-cls"><option value=""'+(it.cls===''?' selected':'')+'>普通</option><option value="mile"'+(it.cls==='mile'?' selected':'')+'>里程碑</option><option value="warn"'+(it.cls==='warn'?' selected':'')+'>重要提醒</option></select>'
+    +'<div class="pbtns"><button class="save" data-pact="save" data-dk="'+dk+'" data-i="'+i+'">保存</button><button class="cancel" data-pact="cancel" data-dk="'+dk+'">取消</button></div></div>'
+    +'</div></li>';
+}
+function renderPlanDay(dk){
+  var ul=document.getElementById('tl-'+dk);if(!ul)return;
+  var items=planState[dk]||[];
+  var h='';
+  items.forEach(function(it,i){
+    if(planEdit&&planEdit.dk===dk&&planEdit.i===i){h+=formHTML(dk,i,it);return;}
+    h+='<li class="'+(it.cls||'')+'">'
+      +'<span class="t-time">'+escH(it.time)+'</span><span class="t-title">'+it.title+'</span>'
+      +'<span class="acts"><button data-pact="edit" data-dk="'+dk+'" data-i="'+i+'">编辑</button><button data-pact="del" data-dk="'+dk+'" data-i="'+i+'">删除</button></span>'
+      +(it.detail?'<div class="t-detail">'+it.detail+'</div>':'')
+      +'</li>';
+  });
+  if(planEdit&&planEdit.dk===dk&&planEdit.i===items.length){h+=formHTML(dk,items.length,{time:'',title:'',detail:'',cls:''});}
+  ul.innerHTML=h;
+}
+document.addEventListener('click',function(e){
+  var a=e.target.closest('[data-pact]');if(!a)return;
+  var dk=a.getAttribute('data-dk'),act=a.getAttribute('data-pact');
+  var i=parseInt(a.getAttribute('data-i'),10);
+  if(act==='add'){
+    planState[dk].push({time:'',title:'',detail:'',cls:''});
+    planEdit={dk:dk,i:planState[dk].length-1};
+    savePlanState();renderPlanDay(dk);
+    var inp=document.getElementById('pf-time');if(inp)inp.focus();
+  }else if(act==='edit'){
+    planEdit={dk:dk,i:i};renderPlanDay(dk);
+  }else if(act==='del'){
+    if(confirm('删除这一项?')){planState[dk].splice(i,1);savePlanState();renderPlanDay(dk);}
+  }else if(act==='cancel'){
+    planEdit=null;
+    if(planState[dk][i]&&!planState[dk][i].title&&!planState[dk][i].time){planState[dk].splice(i,1);}
+    savePlanState();renderPlanDay(dk);
+  }else if(act==='reset'){
+    if(confirm('恢复这一天为默认行程?你对此页的修改会被覆盖。')){
+      planState[dk]=JSON.parse(JSON.stringify(PLAN_DEFAULT[dk]));
+      savePlanState();planEdit=null;renderPlanDay(dk);
+    }
+  }else if(act==='save'){
+    var t=document.getElementById('pf-time').value.trim();
+    var ti=document.getElementById('pf-title').value.trim();
+    var de=document.getElementById('pf-detail').value;
+    var cl=document.getElementById('pf-cls').value;
+    if(!t&&!ti){planState[dk].splice(i,1);savePlanState();planEdit=null;renderPlanDay(dk);return;}
+    planState[dk][i]={time:t,title:ti,detail:de,cls:cl};
+    savePlanState();planEdit=null;renderPlanDay(dk);
+  }
+});
+loadPlanState();
+['d1','d2','d3','d4','d5'].forEach(renderPlanDay);
 
 /* ---- countdowns ---- */
 function fmt(ms){
