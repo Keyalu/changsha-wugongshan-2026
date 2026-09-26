@@ -6,13 +6,13 @@
 <title>长沙·武功山 · 4人5日导览</title>
 <style>
   :root{
-    --bg:#f2f7f3; --card:#ffffff; --ink:#1b2b23; --sub:#66786d;
-    --orange:#16a34a; --orange-deep:#157a45; --orange-soft:#e4f5ec;
-    --teal:#0e7c70; --teal-soft:#dff0ee;
-    --red:#d92d20; --red-soft:#fee4e2;
-    --gold:#b54708; --gold-soft:#fdf0e0;
-    --purple:#6941c6; --purple-soft:#efeafc;
-    --line:#dfe8e2;
+    --bg:#f4f7f5; --card:#ffffff; --ink:#2a3b31; --sub:#71827a;
+    --orange:#8fbf9f; --orange-deep:#3d7a55; --orange-soft:#e7f2ea;
+    --teal:#5f9ea0; --teal-soft:#e3f1f0;
+    --red:#c05b4f; --red-soft:#f9e9e6;
+    --gold:#96793d; --gold-soft:#f6f0e2;
+    --purple:#8071bd; --purple-soft:#f1eef9;
+    --line:#e2eae4;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -35,7 +35,7 @@
   header.top h1 .hl{color:var(--orange);}
   header.top .meta{color:var(--sub);font-size:13px;margin-top:2px;}
   .next-alarm{
-    margin-top:12px;background:var(--orange);color:#fff;border-radius:8px;
+    margin-top:12px;background:var(--orange-soft);color:var(--orange-deep);border:1px solid #cfe3d6;border-radius:8px;
     padding:9px 15px;font-size:13.5px;cursor:pointer;display:inline-block;font-weight:600;
   }
   .next-alarm b{font-weight:800;}
@@ -53,8 +53,7 @@
     padding:8px 13px 7px;font-size:13.5px;font-weight:600;color:var(--sub);
     font-family:inherit;display:flex;align-items:center;gap:5px;
   }
-  .tabbar button.on{color:var(--orange-deep);border-bottom-color:var(--orange);font-weight:800;}
-  .panel{display:none;padding:20px 0 56px;}
+  .tabbar button.on{color:var(--orange-deep);border-bottom-color:var(--orange);font-weight:800;}  .panel{display:none;padding:20px 0 56px;}
   .panel.on{display:block;animation:fade .18s ease;}
   @keyframes fade{from{opacity:0;}to{opacity:1;}}
 
@@ -73,11 +72,11 @@
   .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
   a.plain{color:var(--teal);text-decoration:none;border-bottom:1px dotted;}
   button.copy{
-    border:0;background:var(--teal);color:#fff;border-radius:7px;padding:5px 13px;
+    border:1px solid #bcd6c6;background:var(--orange-soft);color:var(--orange-deep);border-radius:7px;padding:5px 13px;
     font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;
   }
-  button.copy:hover{background:#0b6156;}
-  button.copy.ok{background:var(--gold);}
+  button.copy:hover{background:#d8eadd;}
+  button.copy.ok{background:var(--gold-soft);color:var(--gold);border-color:#e3d5b3;}
   .copy-chip{
     display:inline-flex;max-width:100%;overflow:hidden;background:#f1f3f5;
     border:1px solid var(--line);border-radius:7px;padding:3px 9px;font-size:12px;
@@ -105,7 +104,7 @@
   .todo{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px;}
   .todo:last-child{border-bottom:0;}
   .todo .n{
-    flex-shrink:0;width:21px;height:21px;border-radius:6px;background:var(--orange);color:#fff;
+    flex-shrink:0;width:21px;height:21px;border-radius:6px;background:var(--orange-soft);color:var(--orange-deep);
     font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px;
   }
 
@@ -124,7 +123,7 @@
     flex-shrink:0;border:1px solid var(--line);background:#fff;cursor:pointer;font-family:inherit;
     border-radius:7px;padding:6px 13px;font-size:13px;font-weight:700;color:var(--sub);
   }
-  .daynav button.on{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .daynav button.on{background:var(--orange-soft);border-color:#bcd6c6;color:var(--orange-deep);}
   .day-panel{display:none;}
   .day-panel.on{display:block;animation:fade .18s ease;}
   .day-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
@@ -150,11 +149,11 @@
   /* ---------- map ---------- */
   #tripmap{width:100%;height:64vh;min-height:420px;}
   .mkt{display:flex;flex-direction:column;align-items:center;font-weight:800;}
-  .mkt .b{width:22px;height:22px;border-radius:5px;background:var(--orange);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.25);}
+  .mkt .b{width:22px;height:22px;border-radius:6px;background:var(--orange-soft);border:1px solid #9fc7ad;color:var(--orange-deep);font-size:12px;display:flex;align-items:center;justify-content:center;}
   .mkt .t{margin-top:3px;background:#fff;border:1px solid var(--line);border-radius:5px;padding:0 5px;font-size:11px;color:var(--ink);white-space:nowrap;}
   .mapbar{display:flex;gap:6px;align-items:center;margin:10px 0;flex-wrap:wrap;}
   .mapbar button{border:1px solid var(--line);background:#fff;border-radius:7px;padding:4px 12px;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer;font-family:inherit;}
-  .mapbar button.on{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .mapbar button.on{background:var(--orange-soft);border-color:#bcd6c6;color:var(--orange-deep);}
   .lg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--sub);}
   .lg b{display:inline-block;width:22px;height:0;border-top:3px solid;vertical-align:3px;margin-right:4px;}
   .rs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
@@ -162,9 +161,9 @@
   .rs .mm{font-style:normal;background:#eef1f4;border-radius:4px;padding:0 6px;margin-right:6px;font-size:11px;font-weight:700;}
 
   /* ---------- buttons / links ---------- */
-  .linkbtn{display:inline-block;background:var(--teal);color:#fff;border-radius:7px;padding:5px 14px;font-size:13px;font-weight:700;text-decoration:none;}
-  .linkbtn:hover{background:#0b6156;}
-  .navbtn{display:inline-block;margin-top:6px;background:var(--orange);color:#fff;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;text-decoration:none;}
+  .linkbtn{display:inline-block;background:var(--teal-soft);color:#3f7d79;border:1px solid #c5e0de;border-radius:7px;padding:5px 14px;font-size:13px;font-weight:700;text-decoration:none;}
+  .linkbtn:hover{background:#d3e8e6;}
+  .navbtn{display:inline-block;margin-top:6px;background:var(--orange-soft);color:var(--orange-deep);border:1px solid #bcd6c6;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;text-decoration:none;}
 
   /* ---------- weather ---------- */
   .wx{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;}
@@ -179,8 +178,8 @@
   .food-group h4{display:flex;align-items:center;gap:8px;}
   #toast{
     position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
-    background:var(--ink);color:#fff;border-radius:8px;padding:10px 16px;font-size:13px;line-height:1.55;
-    max-width:86vw;z-index:99;display:none;box-shadow:0 4px 14px rgba(0,0,0,.2);
+    background:#ffffff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 16px;font-size:13px;line-height:1.55;
+    max-width:86vw;z-index:99;display:none;box-shadow:0 4px 14px rgba(40,60,50,.12);
   }
   footer{padding:0 16px 44px;color:var(--sub);font-size:12px;max-width:920px;margin:0 auto;}
   @media (max-width:640px){
@@ -502,12 +501,12 @@
     <span class="hint" style="margin:0;" id="mapHint">市内路线由高德实时规划,高铁/索道为示意线;点标点看说明。D5足浴店未定,定好后自动补线。</span>
   </div>
   <div class="lg">
-    <span><b style="border-color:#16a34a;"></b>驾车/打车</span>
-    <span><b style="border-color:#2563eb;border-top-style:dashed;"></b>地铁/公交</span>
-    <span><b style="border-color:#6941c6;border-top-style:dashed;"></b>高铁(示意)</span>
-    <span><b style="border-color:#d92d20;"></b>夜爬徒步线</span>
-    <span><b style="border-color:#0d9488;border-top-style:dotted;"></b>索道(示意)</span>
-    <span><b style="border-color:#697380;"></b>步行</span>
+    <span><b style="border-color:#8fbf9f;"></b>驾车/打车</span>
+    <span><b style="border-color:#8aa9d4;border-top-style:dashed;"></b>地铁/公交</span>
+    <span><b style="border-color:#a394d6;border-top-style:dashed;"></b>高铁(示意)</span>
+    <span><b style="border-color:#c96b5d;"></b>夜爬徒步线</span>
+    <span><b style="border-color:#6aa8a4;border-top-style:dotted;"></b>索道(示意)</span>
+    <span><b style="border-color:#97a49d;"></b>步行</span>
   </div>
 </section>
 
@@ -830,7 +829,7 @@ function addLine(pts,st){
   mapObj.add(l);overlays.push(l);
 }
 function straight(rt){
-  const S={transit:{color:'#2563eb',weight:4,dashArray:[10,5]},drive:{color:'#16a34a',weight:4},rail:{color:'#6941c6',weight:4.5,dashArray:[14,8]},walk:{color:'#697380',weight:3,opacity:.8},cable:{color:'#0d9488',weight:3.5,dashArray:[2,7]}}[rt.mode];
+  const S={transit:{color:'#8aa9d4',weight:4,dashArray:[10,5]},drive:{color:'#8fbf9f',weight:4},rail:{color:'#a394d6',weight:4.5,dashArray:[14,8]},walk:{color:'#97a49d',weight:3,opacity:.85},cable:{color:'#6aa8a4',weight:3.5,dashArray:[2,7]}}[rt.mode];
   addLine([POI[rt.from],POI[rt.to]],S);
 }
 function hav(a,b){const R=6371000,r=Math.PI/180,dLa=(b[1]-a[1])*r,dLo=(b[0]-a[0])*r,s=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a[1]*r)*Math.cos(b[1]*r)*Math.sin(dLo/2)*Math.sin(dLo/2);return 2*R*Math.asin(Math.sqrt(s));}
@@ -845,7 +844,7 @@ async function drawRoute(rt){
   const M={transit:'地铁',drive:'驾车',rail:'高铁',walk:'步行',cable:'索道',hike:'徒步'};
   function meta(t,d){return{icon:M[rt.mode],from:rt.from,to:rt.to,t:t,d:d};}
   if(rt.mode==='hike'){
-    addLine(rt.via.map(function(k){return POI[k];}),{color:'#d92d20',weight:6,dir:true,outline:true});
+    addLine(rt.via.map(function(k){return POI[k];}),{color:'#c96b5d',weight:6,dir:true,outline:true});
     let d=0;for(let i=1;i<rt.via.length;i++){d+=hav(POI[rt.via[i-1]],POI[rt.via[i]]);}
     return meta('5–6小时',(d*1.15/1000).toFixed(1)+'km');
   }
@@ -877,7 +876,7 @@ function planRoute(rt){
             else if(r.steps){r.steps.forEach(function(st){(st.path||[]).forEach(function(ll){pts.push(ll);});});}
           }
           if(pts.length>1){
-            addLine(pts,rt.mode==='transit'?{color:'#2563eb',weight:4,dashArray:[10,5]}:{color:'#16a34a',weight:4});
+            addLine(pts,rt.mode==='transit'?{color:'#8aa9d4',weight:4,dashArray:[10,5]}:{color:'#8fbf9f',weight:4});
             let meters=0;
             const L=function(p){return[p.lng!==undefined?p.lng:p.getLng(),p.lat!==undefined?p.lat:p.getLat()];};
             for(let i=1;i<pts.length;i++){meters+=hav(L(pts[i-1]),L(pts[i]));}
