@@ -6,12 +6,13 @@
 <title>长沙·武功山 · 4人5日导览</title>
 <style>
   :root{
-    --bg:#f8f6f2; --card:#ffffff; --ink:#33291f; --sub:#948676;
-    --orange:#f4692e; --orange-deep:#d94f14; --orange-soft:#fff1e8;
-    --teal:#12897b; --teal-soft:#e4f4f1;
-    --red:#d63b2f; --red-soft:#fdeeeb;
-    --gold:#b98314; --gold-soft:#faf3e0;
-    --line:#eae3d8;
+    --bg:#f5f6f8; --card:#ffffff; --ink:#1c2530; --sub:#697380;
+    --orange:#e8590c; --orange-deep:#c2410c; --orange-soft:#fff0e6;
+    --teal:#0e7c70; --teal-soft:#e0f2ef;
+    --red:#d92d20; --red-soft:#fee4e2;
+    --gold:#b54708; --gold-soft:#fdf0e0;
+    --purple:#6941c6; --purple-soft:#efeafc;
+    --line:#e4e7ec;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -21,89 +22,96 @@
     line-height:1.65;font-size:15px;
   }
   .wrap{max-width:920px;margin:0 auto;padding:0 16px;}
+  .ic{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2.5px;}
+  .tile{display:inline-flex;width:25px;height:25px;border-radius:6px;background:var(--orange-soft);color:var(--orange);align-items:center;justify-content:center;flex-shrink:0;}
+  .tile .ic{width:14px;height:14px;vertical-align:0;}
+  .tile.t-teal{background:var(--teal-soft);color:var(--teal);}
+  .tile.t-red{background:var(--red-soft);color:var(--red);}
+  .tile.t-purple{background:var(--purple-soft);color:var(--purple);}
 
   /* ---------- header ---------- */
   header.top{padding:26px 0 4px;}
-  header.top h1{font-size:24px;letter-spacing:.5px;}
+  header.top h1{font-size:24px;letter-spacing:.5px;font-weight:800;}
   header.top h1 .hl{color:var(--orange);}
   header.top .meta{color:var(--sub);font-size:13px;margin-top:2px;}
   .next-alarm{
-    margin-top:12px;background:var(--orange);color:#fff;border-radius:12px;
+    margin-top:12px;background:var(--orange);color:#fff;border-radius:8px;
     padding:9px 15px;font-size:13.5px;cursor:pointer;display:inline-block;font-weight:600;
   }
   .next-alarm b{font-weight:800;}
+  .next-alarm .ic{width:14px;height:14px;vertical-align:-2px;}
 
   /* ---------- tab bar ---------- */
   .tabbar{
-    position:sticky;top:0;z-index:40;margin-top:10px;padding:9px 0 8px;
-    background:rgba(248,246,242,.94);backdrop-filter:blur(8px);
-    display:flex;gap:5px;overflow-x:auto;border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;margin-top:10px;padding:9px 0 0;
+    background:rgba(245,246,248,.96);backdrop-filter:blur(8px);
+    display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);
   }
   .tabbar::-webkit-scrollbar{display:none;}
   .tabbar button{
-    flex-shrink:0;border:1px solid transparent;background:none;cursor:pointer;
-    padding:6px 14px;border-radius:99px;font-size:13.5px;font-weight:700;color:var(--sub);
-    font-family:inherit;
+    flex-shrink:0;border:0;border-bottom:2px solid transparent;background:none;cursor:pointer;
+    padding:8px 13px 7px;font-size:13.5px;font-weight:600;color:var(--sub);
+    font-family:inherit;display:flex;align-items:center;gap:5px;
   }
-  .tabbar button.on{background:#fff;color:var(--orange-deep);border-color:var(--line);box-shadow:0 1px 5px rgba(90,60,30,.08);}
-  .tabbar button .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-left:5px;vertical-align:1px;}
+  .tabbar button.on{color:var(--orange-deep);border-bottom-color:var(--orange);font-weight:800;}
   .panel{display:none;padding:20px 0 56px;}
-  .panel.on{display:block;animation:fade .22s ease;}
-  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  .panel.on{display:block;animation:fade .18s ease;}
+  @keyframes fade{from{opacity:0;}to{opacity:1;}}
 
   /* ---------- generic ---------- */
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 17px;}
-  .card h4{font-size:14.5px;margin-bottom:6px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:15px 17px;}
+  .card h4{font-size:14.5px;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .card h4 .htxt{flex:1;}
   .card p{font-size:13.5px;color:var(--sub);}
   .card p b{color:var(--ink);}
-  .pill{display:inline-block;font-size:11.5px;font-weight:800;border-radius:99px;padding:1px 9px;letter-spacing:.3px;}
+  .pill{display:inline-block;font-size:11.5px;font-weight:700;border-radius:5px;padding:1px 8px;}
   .pill.now{background:var(--red-soft);color:var(--red);}
   .pill.rob{background:var(--orange-soft);color:var(--orange-deep);}
   .pill.book{background:var(--teal-soft);color:var(--teal);}
-  .pill.opt{background:#f0edf8;color:#7a63b5;}
+  .pill.opt{background:#f0eafc;color:#6941c6;}
   .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
   a.plain{color:var(--teal);text-decoration:none;border-bottom:1px dotted;}
   button.copy{
-    border:0;background:var(--teal);color:#fff;border-radius:8px;padding:4px 12px;
+    border:0;background:var(--teal);color:#fff;border-radius:7px;padding:5px 13px;
     font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;
   }
-  button.copy:hover{background:#0d6f64;}
+  button.copy:hover{background:#0b6156;}
   button.copy.ok{background:var(--gold);}
   .copy-chip{
-    display:inline-flex;max-width:100%;overflow:hidden;background:#f4efe7;
-    border:1px dashed #d8c9b8;border-radius:9px;padding:3px 9px;font-size:12px;
+    display:inline-flex;max-width:100%;overflow:hidden;background:#f1f3f5;
+    border:1px solid var(--line);border-radius:7px;padding:3px 9px;font-size:12px;
     font-family:Consolas,Menlo,monospace;color:var(--ink);
   }
   .copy-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .copy-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:9px;}
 
   /* ---------- overview ---------- */
-  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-  th,td{padding:9px 13px;text-align:left;font-size:13.5px;border-bottom:1px solid var(--line);}
-  th{background:#faf6ef;font-size:12.5px;color:var(--sub);}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  th,td{padding:8px 13px;text-align:left;font-size:13.5px;border-bottom:1px solid var(--line);}
+  th{background:#f8f9fa;font-size:12.5px;color:var(--sub);}
   tr:last-child td{border-bottom:0;}
   td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
   .total-row td{background:var(--orange-soft);font-weight:800;}
   input.cost{
-    width:80px;border:1px dashed #d8c9b8;border-radius:7px;background:#fffdf9;
+    width:80px;border:1px solid var(--line);border-radius:6px;background:#fff;
     padding:3px 7px;font-size:13.5px;text-align:right;color:var(--ink);font-weight:700;font-family:inherit;
   }
-  input.cost:focus{outline:2px solid var(--orange);border-style:solid;}
+  input.cost:focus{outline:2px solid var(--orange);border-color:var(--orange);}
   .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px;}
-  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 13px;text-align:center;}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 13px;text-align:center;}
   .stat .v{font-size:17px;font-weight:800;color:var(--orange-deep);}
   .stat .k{font-size:12px;color:var(--sub);margin-top:1px;}
   .todo{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px;}
   .todo:last-child{border-bottom:0;}
   .todo .n{
-    flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;
-    font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px;
+    flex-shrink:0;width:21px;height:21px;border-radius:6px;background:var(--orange);color:#fff;
+    font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px;
   }
 
   /* ---------- alarms ---------- */
   .alarm .when{font-size:15.5px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:8px;}
-  .alarm .cd{font-size:11.5px;font-weight:800;color:var(--gold);background:var(--gold-soft);border-radius:99px;padding:2px 9px;white-space:nowrap;}
+  .alarm .cd{font-size:11.5px;font-weight:800;color:var(--gold);background:var(--gold-soft);border-radius:5px;padding:2px 9px;white-space:nowrap;}
   .alarm .cd.done{color:var(--red);background:var(--red-soft);}
   .alarm .what{margin-top:4px;font-weight:700;font-size:14.5px;}
   .alarm .how{margin-top:4px;font-size:13px;color:var(--sub);}
@@ -114,19 +122,19 @@
   .daynav::-webkit-scrollbar{display:none;}
   .daynav button{
     flex-shrink:0;border:1px solid var(--line);background:#fff;cursor:pointer;font-family:inherit;
-    border-radius:10px;padding:6px 13px;font-size:13px;font-weight:700;color:var(--sub);
+    border-radius:7px;padding:6px 13px;font-size:13px;font-weight:700;color:var(--sub);
   }
-  .daynav button.on{background:var(--orange);border-color:var(--orange);color:#fff;}
+  .daynav button.on{background:var(--ink);border-color:var(--ink);color:#fff;}
   .day-panel{display:none;}
-  .day-panel.on{display:block;animation:fade .22s ease;}
+  .day-panel.on{display:block;animation:fade .18s ease;}
   .day-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
   .day-head h3{font-size:17px;}
-  .day-head .stay{font-size:12px;font-weight:700;color:var(--teal);background:var(--teal-soft);border-radius:99px;padding:3px 11px;}
+  .day-head .stay{font-size:12px;font-weight:700;color:var(--teal);background:var(--teal-soft);border-radius:5px;padding:3px 10px;}
   ul.tl{list-style:none;position:relative;padding-left:19px;}
-  ul.tl::before{content:"";position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--line);border-radius:2px;}
+  ul.tl::before{content:"";position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--line);border-radius:0;}
   ul.tl li{position:relative;padding:6px 0 6px 12px;}
   ul.tl li::before{
-    content:"";position:absolute;left:-19px;top:14px;width:9px;height:9px;border-radius:50%;
+    content:"";position:absolute;left:-19px;top:14px;width:9px;height:9px;border-radius:2px;
     background:#fff;border:2.5px solid var(--orange);
   }
   ul.tl li.mile::before{border-color:var(--teal);background:var(--teal-soft);}
@@ -135,39 +143,50 @@
   .t-title{font-weight:700;}
   .t-detail{color:var(--sub);font-size:13px;margin-top:2px;}
   .t-detail b{color:var(--ink);}
-  .mini-card{background:#fbf8f3;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-top:12px;font-size:13px;}
+  .mini-card{background:#f8f9fa;border:1px solid var(--line);border-radius:8px;padding:11px 14px;margin-top:12px;font-size:13px;}
   .mini-card .mc-title{font-weight:800;font-size:13px;margin-bottom:3px;}
   .mini-card a{color:var(--teal);font-weight:600;text-decoration:none;border-bottom:1px dotted;}
 
-  footer{padding:0 16px 44px;color:var(--sub);font-size:12px;max-width:920px;margin:0 auto;}
   /* ---------- map ---------- */
   #tripmap{width:100%;height:64vh;min-height:420px;}
   .mkt{display:flex;flex-direction:column;align-items:center;font-weight:800;}
-  .mkt .b{width:23px;height:23px;border-radius:50% 50% 50% 4px;background:var(--orange);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;transform:rotate(-45deg);}
-  .mkt .b span{transform:rotate(45deg);}
-  .mkt .t{margin-top:3px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:0 5px;font-size:11px;color:var(--ink);white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.12);}
+  .mkt .b{width:22px;height:22px;border-radius:5px;background:var(--orange);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.25);}
+  .mkt .t{margin-top:3px;background:#fff;border:1px solid var(--line);border-radius:5px;padding:0 5px;font-size:11px;color:var(--ink);white-space:nowrap;}
   .mapbar{display:flex;gap:6px;align-items:center;margin:10px 0;flex-wrap:wrap;}
-  .mapbar button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 12px;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer;font-family:inherit;}
-  .mapbar button.on{background:var(--orange);border-color:var(--orange);color:#fff;}
+  .mapbar button{border:1px solid var(--line);background:#fff;border-radius:7px;padding:4px 12px;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer;font-family:inherit;}
+  .mapbar button.on{background:var(--ink);border-color:var(--ink);color:#fff;}
   .lg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--sub);}
   .lg b{display:inline-block;width:22px;height:0;border-top:3px solid;vertical-align:3px;margin-right:4px;}
   .rs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
-  .rs span{background:#fff;border:1px solid var(--line);border-radius:99px;padding:3px 11px;font-size:12px;font-weight:700;color:var(--ink);}
-  .linkbtn{display:inline-block;background:var(--teal);color:#fff;border-radius:8px;padding:5px 14px;font-size:13px;font-weight:700;text-decoration:none;}
-  .linkbtn:hover{background:#0d6f64;}
-  .linkbtn.alt{background:var(--orange);}
+  .rs span{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;color:var(--ink);}
+  .rs .mm{font-style:normal;background:#eef1f4;border-radius:4px;padding:0 6px;margin-right:6px;font-size:11px;font-weight:700;}
+
+  /* ---------- buttons / links ---------- */
+  .linkbtn{display:inline-block;background:var(--teal);color:#fff;border-radius:7px;padding:5px 14px;font-size:13px;font-weight:700;text-decoration:none;}
+  .linkbtn:hover{background:#0b6156;}
+  .navbtn{display:inline-block;margin-top:6px;background:var(--orange);color:#fff;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;text-decoration:none;}
+
+  /* ---------- weather ---------- */
   .wx{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;}
-  .wcard{background:#fbf8f3;border:1px solid var(--line);border-radius:12px;padding:10px 12px;}
+  .wcard{background:#f8f9fa;border:1px solid var(--line);border-radius:8px;padding:10px 12px;}
   .wcard h5{font-size:13.5px;margin-bottom:6px;}
   .wd{display:flex;gap:6px;text-align:center;}
-  .wd .c{flex:1;background:#fff;border:1px solid var(--line);border-radius:9px;padding:6px 2px;font-size:11.5px;color:var(--sub);}
+  .wd .c{flex:1;background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 2px;font-size:11.5px;color:var(--sub);}
   .wd .c b{display:block;font-size:17px;}
   .wd .c .t{color:var(--ink);font-weight:700;}
-  .navbtn{display:inline-block;margin-top:6px;background:var(--orange);color:#fff;border-radius:7px;padding:3px 10px;font-size:12px;font-weight:700;text-decoration:none;}
-  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:rgba(40,30,20,.93);color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;line-height:1.55;max-width:86vw;z-index:99;display:none;box-shadow:0 4px 16px rgba(0,0,0,.28);}
+
+  /* ---------- food / tips ---------- */
+  .food-group h4{display:flex;align-items:center;gap:8px;}
+  #toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+    background:var(--ink);color:#fff;border-radius:8px;padding:10px 16px;font-size:13px;line-height:1.55;
+    max-width:86vw;z-index:99;display:none;box-shadow:0 4px 14px rgba(0,0,0,.2);
+  }
+  footer{padding:0 16px 44px;color:var(--sub);font-size:12px;max-width:920px;margin:0 auto;}
   @media (max-width:640px){
     header.top h1{font-size:20px;}
     table{display:block;overflow-x:auto;}
+    #tripmap{height:56vh;}
   }
   @media print{
     .tabbar,.next-alarm{display:none;}
@@ -178,25 +197,54 @@
 </head>
 <body>
 
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/><path d="M13 5v3M13 10.5v3M13 16v3"/></symbol>
+  <symbol id="i-mount" viewBox="0 0 24 24"><path d="M2 20L9 6l4.5 8L16 10l6 10z"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 10h19"/><path d="M17 14.5h.01"/></symbol>
+  <symbol id="i-bowl" viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M5 12a7 7 0 0 0 14 0"/><path d="M9 8V5M15 8V5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></symbol>
+  <symbol id="i-train" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="12" rx="3"/><path d="M5 9h14"/><path d="M9 15l-2 6M15 15l2 6"/><path d="M8.5 18.5h7"/></symbol>
+  <symbol id="i-museum" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21v-8M9.5 21v-8M14.5 21v-8M19 21v-8"/><path d="M2.5 10L12 3l9.5 7z"/></symbol>
+  <symbol id="i-tree" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M12 14v7"/><path d="M8 21h8"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7l5.7 5.7a8 8 0 1 1-11.4 0z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 0 0 0-9h-1.3A7 7 0 1 0 6 19z"/></symbol>
+  <symbol id="i-batt" viewBox="0 0 24 24"><rect x="2" y="7" width="17" height="11" rx="2"/><path d="M22 11v3"/><path d="M6 11v3M10 11v3"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-act" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></symbol>
+</svg>
+
 <header class="top">
   <div class="wrap">
     <h1>长沙<span class="hl">·</span>武功山 <span style="font-size:15px;color:var(--sub);font-weight:600;">4人5日导览</span></h1>
     <div class="meta">2男2女 · 10.3(六)晚 — 10.7(三)午 · 信息核验 2026-09-26</div>
-    <div class="next-alarm" id="nextAlarm" title="点击查看抢票清单">⏰ 计算中…</div>
+    <div class="next-alarm" id="nextAlarm" title="点击查看抢票清单">正在计算最近的开抢节点…</div>
   </div>
 </header>
 
 <div class="wrap" style="padding:0;">
 <nav class="tabbar wrap" id="tabbar">
-  <button data-tab="overview" class="on">总览</button>
-  <button data-tab="alarms">⏰ 抢票闹钟</button>
-  <button data-tab="trip">🗓 每日行程</button>
-  <button data-tab="map">🗺 地图</button>
-  <button data-tab="tickets">🎫 购票</button>
-  <button data-tab="wugong">⛰ 夜爬专区</button>
-  <button data-tab="budget">💰 预算</button>
-  <button data-tab="food">🍜 美食</button>
-  <button data-tab="tips">✅ 贴士</button>
+  <button data-tab="overview" class="on"><svg class="ic"><use href="#i-grid"/></svg>总览</button>
+  <button data-tab="alarms"><svg class="ic"><use href="#i-bell"/></svg>抢票闹钟</button>
+  <button data-tab="trip"><svg class="ic"><use href="#i-cal"/></svg>每日行程</button>
+  <button data-tab="map"><svg class="ic"><use href="#i-map"/></svg>地图</button>
+  <button data-tab="tickets"><svg class="ic"><use href="#i-ticket"/></svg>购票</button>
+  <button data-tab="wugong"><svg class="ic"><use href="#i-mount"/></svg>夜爬专区</button>
+  <button data-tab="budget"><svg class="ic"><use href="#i-wallet"/></svg>预算</button>
+  <button data-tab="food"><svg class="ic"><use href="#i-bowl"/></svg>美食</button>
+  <button data-tab="tips"><svg class="ic"><use href="#i-check"/></svg>贴士</button>
 </nav>
 </div>
 
@@ -205,7 +253,7 @@
 <!-- ================= 总览 ================= -->
 <section class="panel on" id="panel-overview">
   <div class="card" style="margin-bottom:12px;">
-    <h4>🗺 行程一览</h4>
+    <h4><span class="tile"><svg class="ic"><use href="#i-grid"/></svg></span><span class="htxt">行程一览</span></h4>
     <table style="margin-top:6px;">
       <tr><th>日期</th><th>安排</th><th>住宿</th></tr>
       <tr><td><b>10/3 六</b></td><td>晚上到长沙 → 入住</td><td>乎然民宿(河西)</td></tr>
@@ -217,14 +265,14 @@
   </div>
 
   <div class="card" style="margin-bottom:12px;">
-    <h4>🔥 现在就该做的三件事</h4>
+    <h4><span class="tile t-red"><svg class="ic"><use href="#i-flag"/></svg></span><span class="htxt">现在就该做的三件事</span></h4>
     <div class="todo"><span class="n">1</span><span><b>买高铁票</b>(12306已开售):10/5 长沙南→萍乡北(16:30–17:30发车) + 10/6 萍乡北→长沙南(15:00–17:00到),二等座 54.5 元/人/程</span></div>
     <div class="todo"><span class="n">2</span><span><b>抢省博 10/5 门票</b>:9/28 起<b>每晚 20:00</b> 进小程序试约+挂候补,9/30 是主抢场</span></div>
     <div class="todo"><span class="n">3</span><span><b>订 10/6 足浴过夜店</b>:美团/点评搜「24小时·可过夜」,电话确认后再下单</span></div>
   </div>
 
   <div class="card" style="margin-bottom:12px;">
-    <h4>🌤 行程期天气预报 <span class="pill opt">自动更新</span></h4>
+    <h4><span class="tile"><svg class="ic"><use href="#i-sun"/></svg></span><span class="htxt">行程期天气预报</span><span class="pill opt">自动更新</span></h4>
     <div class="wx" id="wxBox"><p class="hint">正在加载天气…</p></div>
     <p class="hint">山顶预报已按 1900m 海拔修正;山间天气多变,出发前 3 天再看一眼,雨具带好。</p>
   </div>
@@ -237,7 +285,7 @@
     <div class="stat"><div class="v">5–10℃</div><div class="k">山顶夜间温度</div></div>
     <div class="stat"><div class="v">¥0</div><div class="k">省博/橘子洲门票</div></div>
   </div>
-  <p class="hint">详细规则和入口都在上方标签页里;抢票时间线看「⏰ 抢票闹钟」。</p>
+  <p class="hint">详细规则和入口都在上方标签页里;抢票时间线看「抢票闹钟」。</p>
 </section>
 
 <!-- ================= 抢票闹钟 ================= -->
@@ -246,56 +294,56 @@
 
     <div class="card alarm">
       <div class="when"><span class="pill now">立即 · 已开售</span></div>
-      <div class="what">🚄 10/5 高铁 长沙南 → 萍乡北</div>
+      <div class="what"><svg class="ic"><use href="#i-train"/></svg> 10/5 高铁 长沙南 → 萍乡北</div>
       <div class="how">选 <b>16:30–17:30 发车</b> 的 G 字头(约30分钟,54.5元),4 人一起买,下馆后从容赶到。</div>
     </div>
 
     <div class="card alarm">
       <div class="when"><span class="pill now">立即 · 已开售</span></div>
-      <div class="what">🚄 10/6 高铁 萍乡北 → 长沙南</div>
+      <div class="what"><svg class="ic"><use href="#i-train"/></svg> 10/6 高铁 萍乡北 → 长沙南</div>
       <div class="how">选 <b>15:00–17:00 到达</b> 的车次,下山后有时间回民宿洗漱。国庆返程紧,买好再玩。</div>
     </div>
 
     <div class="card alarm">
       <div class="when">9/28(一) 20:00 <span class="cd" data-deadline="2026-09-28T20:00:00+08:00">…</span></div>
-      <div class="what"><span class="pill rob">试探点</span> 🏛 省博 10/5 门票 · 第一次尝试</div>
+      <div class="what"><span class="pill rob">试探点</span> 湖南博物院 10/5 门票 · 第一次尝试</div>
       <div class="how">提前天数有「<b>5天</b>」「<b>7天</b>」两种口径,按 7 天算就是今晚。约不到挂<b>候补</b>。</div>
     </div>
 
     <div class="card alarm">
       <div class="when">9/30(三) 20:00 <span class="cd" data-deadline="2026-09-30T20:00:00+08:00">…</span></div>
-      <div class="what"><span class="pill rob">主抢场</span> 🏛 省博 10/5 门票</div>
+      <div class="what"><span class="pill rob">主抢场</span> 湖南博物院 10/5 门票</div>
       <div class="how">多数攻略口径「<b>提前5天、每晚20:00放票</b>」——必抢。9/28 起每晚都试,白天刷退票。</div>
       <div class="copy-row">
-        <button class="copy" data-copy="#小程序://湖南省博物馆/3O0fIEOxKj3rhSm">📲 复制口令·跳微信</button>
+        <button class="copy" data-copy="#小程序://湖南省博物馆/3O0fIEOxKj3rhSm">复制口令,跳微信</button>
         <span class="copy-chip"><span>#小程序://湖南省博物馆/3O0fIEOxKj3rhSm</span></span>
       </div>
     </div>
 
     <div class="card alarm">
       <div class="when">10/1(四) 早7:00起 <span class="cd" data-deadline="2026-10-01T07:00:00+08:00">…</span></div>
-      <div class="what"><span class="pill rob">预约开放日</span> 🏝 橘子洲 10/4 预约(提前3天)</div>
+      <div class="what"><span class="pill rob">预约开放日</span> 橘子洲 10/4 预约(提前3天)</div>
       <div class="how">不是固定时刻放票:<b>7:00–22:00 随机放票 + 退票回池</b>(本地宝 9/23 更新)。10/1 起<b>早中晚多刷</b>,10/2–10/3 捡漏。4 人全部实名。</div>
       <div class="copy-row">
-        <button class="copy" data-copy="#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k">📲 复制口令·跳微信</button>
+        <button class="copy" data-copy="#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k">复制口令,跳微信</button>
         <span class="copy-chip"><span>#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k</span></span>
       </div>
     </div>
 
     <div class="card alarm">
       <div class="when">建议 10/1 前</div>
-      <div class="what"><span class="pill book">待办</span> 🦶 10/6 足浴过夜店(未定)</div>
-      <div class="how">美团/点评搜「<b>24小时·可过夜</b>」:金色印象、碧海云天(约139元/位含三餐+过夜)、汤乐泉。<b>电话确认过夜政策</b>再下单,选地铁2号线沿线方便去长沙南。</div>
+      <div class="what"><span class="pill book">待办</span> 10/6 长沙足浴过夜店(未定)</div>
+      <div class="how">美团/点评搜「<b>24小时·可过夜</b>」:金色印象、碧海云天(约139元/位含三餐+过夜)、汤乐泉。<b>电话确认过夜政策</b>再下单,选地铁2号线沿线方便回长沙南。</div>
     </div>
 
     <div class="card alarm">
       <div class="when">10/1(同橘子洲)</div>
-      <div class="what"><span class="pill opt">可选</span> ⛰ 岳麓山 10/4 傍晚场</div>
+      <div class="what"><span class="pill opt">可选</span> 岳麓山 10/4 傍晚场</div>
       <div class="how">与橘子洲同平台预约(提前3天)。当晚是大学城+后湖,<b>体力想留给武功山可以不约</b>。</div>
     </div>
 
   </div>
-  <p class="hint">💡 口令用法:手机上点「📲 复制口令·跳微信」会自动复制并拉起微信——顶部若弹出口令气泡,点它直达小程序;没弹出就打开微信,在顶部搜索框粘贴口令,点第一个结果。省博也可走公众号「湖南省博物馆」或官网 yuyues.hnmuseum.com。</p>
+  <p class="hint">💡 口令用法:手机上点「复制口令,跳微信」会自动复制并拉起微信——顶部若弹出口令气泡,点它直达小程序;没弹出就打开微信,在顶部搜索框粘贴口令,点第一个结果。省博也可走公众号「湖南省博物馆」或官网 yuyues.hnmuseum.com。</p>
 </section>
 
 <!-- ================= 每日行程 ================= -->
@@ -310,7 +358,7 @@
 
   <div class="day-panel on" id="dpanel-d1">
     <div class="card">
-      <div class="day-head"><h3>10/3(六) 落地 → 入住河西</h3><span class="stay">🏨 乎然民宿 · 第1晚</span></div>
+      <div class="day-head"><h3>10/3(六) 落地 → 入住河西</h3><span class="stay">乎然民宿 · 第1晚</span></div>
       <ul class="tl">
         <li><span class="t-time">晚上</span><span class="t-title">抵达长沙</span>
           <div class="t-detail"><b>高铁到长沙南</b>:地铁2号线→迎宾路口换6号线→六沟垅(约50分钟),打车约35分钟。<b>飞机到黄花机场</b>:磁浮→长沙南再照走,打车约50–60分钟。</div>
@@ -323,7 +371,7 @@
         </li>
       </ul>
       <div class="mini-card">
-        <div class="mc-title">🏨 乎然民宿河西店(10/3–10/4 两晚 · 已订)</div>
+        <div class="mc-title">住宿信息|乎然民宿河西店(10/3–10/4 两晚 · 已订)</div>
         岳麓区银盆岭街道保利天禧E4栋31层 3131 · ☎ <a href="tel:19186963252">19186963252</a> ·
         <a href="http://dpurl.cn/4y7BqK4z" target="_blank">美团订单</a>
         <button class="copy" data-copy="长沙岳麓区银盆岭街道保利天禧E4栋31层3131 乎然民宿河西店 电话19186963252">复制地址</button>
@@ -333,7 +381,7 @@
 
   <div class="day-panel" id="dpanel-d2">
     <div class="card">
-      <div class="day-head"><h3>10/4(日) 橘子洲 + 大学城 + 后湖</h3><span class="stay">🏨 乎然民宿 · 第2晚</span></div>
+      <div class="day-head"><h3>10/4(日) 橘子洲 + 大学城 + 后湖</h3><span class="stay">乎然民宿 · 第2晚</span></div>
       <ul class="tl">
         <li><span class="t-time">08:00</span><span class="t-title">早餐</span><div class="t-detail">嗦一碗长沙米粉出发。</div></li>
         <li><span class="t-time">09:00</span><span class="t-title">橘子洲</span>
@@ -356,7 +404,7 @@
 
   <div class="day-panel" id="dpanel-d3">
     <div class="card">
-      <div class="day-head"><h3>10/5(一) 省博 → 萍乡 → 夜爬武功山</h3><span class="stay">🏨 归屿民宿(山下)</span></div>
+      <div class="day-head"><h3>10/5(一) 省博 → 萍乡 → 夜爬武功山</h3><span class="stay">归屿民宿(山下)</span></div>
       <ul class="tl">
         <li><span class="t-time">08:30</span><span class="t-title">退房,行李随身</span>
           <div class="t-detail">行李<b>寄存省博寄存处</b>(以馆内公告为准),出馆取行李直奔高铁站。</div>
@@ -377,12 +425,12 @@
         <li class="warn"><span class="t-time">21:30</span><span class="t-title">石鼓寺登山口</span>
           <div class="t-detail">夜爬时段有景交接驳(约19:30–24:00),或民宿送。<b>门票 70 元/人提前买好</b>,身份证随身。</div>
         </li>
-        <li class="warn"><span class="t-time">22:00</span><span class="t-title">开爬!头灯必戴</span>
+        <li class="warn"><span class="t-time">22:00</span><span class="t-title">开爬,头灯必戴</span>
           <div class="t-detail">5–6小时登顶,凌晨3:30–4:30到金顶。细节见「夜爬专区」。</div>
         </li>
       </ul>
       <div class="mini-card">
-        <div class="mc-title">🏨 归屿民宿(10/5 晚 · 已订 · 放行李+下山休整)</div>
+        <div class="mc-title">住宿信息|归屿民宿(10/5 晚 · 已订 · 放行李+下山休整)</div>
         芦溪县芦万武旅游公路蔡家村杨家8组 · ☎ <a href="tel:15798067638">15798067638</a> ·
         <a href="http://dpurl.cn/mxyv0eYz" target="_blank">美团订单</a>
         <button class="copy" data-copy="萍乡市芦溪县芦万武旅游公路蔡家村杨家8组 归屿民宿(武功山景区店) 电话15798067638">复制地址</button>
@@ -392,12 +440,12 @@
 
   <div class="day-panel" id="dpanel-d4">
     <div class="card">
-      <div class="day-head"><h3>10/6(二) 日出 → 下山 → 回长沙 → 足浴</h3><span class="stay">🦶 足浴店过夜(待订)</span></div>
+      <div class="day-head"><h3>10/6(二) 日出 → 下山 → 回长沙 → 足浴</h3><span class="stay">足浴店过夜(待订)</span></div>
       <ul class="tl">
         <li class="warn"><span class="t-time">03:30–04:30</span><span class="t-title">金顶占位</span>
           <div class="t-detail">夜里 <b>5–10℃+大风</b>,租军大衣(约¥30–50)或穿厚外套,找背风处。</div>
         </li>
-        <li class="mile"><span class="t-time">06:10–06:25</span><span class="t-title">🌅 金顶日出 · 高山草甸</span>
+        <li class="mile"><span class="t-time">06:10–06:25</span><span class="t-title">金顶日出 · 高山草甸</span>
           <div class="t-detail">10月初日出约 6:15(以当日预报为准),草甸开始转金,最出片的季节。</div>
         </li>
         <li><span class="t-time">07:30</span><span class="t-title">索道下山(二级35 + 一级50)</span>
@@ -410,7 +458,7 @@
         </li>
       </ul>
       <div class="mini-card">
-        <div class="mc-title">🦶 足浴店怎么挑(未订)</div>
+        <div class="mc-title">足浴店怎么挑(10/6 晚 · 未订)</div>
         ① <b>金色印象</b>:网红「足浴+炫饭」过夜模式;② <b>碧海云天</b>:约139元/位含洗浴+三餐+24h过夜;③ <b>汤乐泉</b>:大型日韩式汤泉,体验最好但离南站稍远(地铁可达)。<br>
         ✅ 下单前电话确认:<b>是否真可过夜、躺椅还是独立间、几点退</b>。优先地铁2号线沿线。
       </div>
@@ -419,7 +467,7 @@
 
   <div class="day-panel" id="dpanel-d5">
     <div class="card">
-      <div class="day-head"><h3>10/7(三) 收拾 → 高铁返程</h3><span class="stay">🚄 长沙南出发</span></div>
+      <div class="day-head"><h3>10/7(三) 收拾 → 高铁返程</h3><span class="stay">长沙南出发</span></div>
       <ul class="tl">
         <li><span class="t-time">上午</span><span class="t-title">收拾退房</span>
           <div class="t-detail">足浴店一般<b>中午12点前退</b>,行李寄存前台;顺便备份这几天照片。</div>
@@ -428,7 +476,7 @@
           <div class="t-detail">辣椒炒肉/小炒黄牛肉,或在长沙南站里解决。</div>
         </li>
         <li><span class="t-time">13:30</span><span class="t-title">去长沙南站</span>
-          <div class="t-detail">地铁2号线约30–40分钟,<b>提前1小时到站</b>,下午高铁回家 🚄。</div>
+          <div class="t-detail">地铁2号线约30–40分钟,<b>提前1小时到站</b>,下午高铁回家。</div>
         </li>
       </ul>
     </div>
@@ -449,17 +497,17 @@
   </div>
   <div class="rs" id="routeSummary"></div>
   <div class="mapbar">
-    <button id="layerStd" class="on">🗺 标准图</button>
-    <button id="layerSat">🛰 卫星图</button>
+    <button id="layerStd" class="on">标准图</button>
+    <button id="layerSat">卫星图</button>
     <span class="hint" style="margin:0;" id="mapHint">市内路线由高德实时规划,高铁/索道为示意线;点标点看说明。D5足浴店未定,定好后自动补线。</span>
   </div>
   <div class="lg">
-    <span><b style="border-color:#12897b;"></b>驾车/打车</span>
-    <span><b style="border-color:#4f6bd6;border-top-style:dashed;"></b>地铁/公交</span>
-    <span><b style="border-color:#7a63b5;border-top-style:dashed;"></b>高铁(示意)</span>
-    <span><b style="border-color:#d94f14;"></b>夜爬徒步线</span>
-    <span><b style="border-color:#f4692e;border-top-style:dotted;"></b>索道(示意)</span>
-    <span><b style="border-color:#948676;"></b>步行</span>
+    <span><b style="border-color:#0e7c70;"></b>驾车/打车</span>
+    <span><b style="border-color:#2563eb;border-top-style:dashed;"></b>地铁/公交</span>
+    <span><b style="border-color:#6941c6;border-top-style:dashed;"></b>高铁(示意)</span>
+    <span><b style="border-color:#d92d20;"></b>夜爬徒步线</span>
+    <span><b style="border-color:#e8590c;border-top-style:dotted;"></b>索道(示意)</span>
+    <span><b style="border-color:#697380;"></b>步行</span>
   </div>
 </section>
 
@@ -467,7 +515,7 @@
 <section class="panel" id="panel-tickets">
   <div class="grid">
     <div class="card">
-      <h4>🚄 10/5 高铁 · 长沙南 → 萍乡北</h4>
+      <h4><span class="tile"><svg class="ic"><use href="#i-train"/></svg></span><span class="htxt">10/5 高铁 · 长沙南 → 萍乡北</span></h4>
       <p>建议选 <b>16:30–17:30 发车</b> 的 G 字头,二等座 <b>54.5 元</b>,车程约 30 分钟。12306 已开售,买好 4 人同车厢更省心。</p>
       <div class="copy-row">
         <a class="linkbtn" target="_blank" href="https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E9%95%BF%E6%B2%99%E5%8D%97,CWQ&ts=%E8%90%8D%E4%B9%A1%E5%8C%97,PBG&date=2026-10-05&flag=N,N,Y">12306 查 10/5 车次·购票</a>
@@ -475,7 +523,7 @@
       </div>
     </div>
     <div class="card">
-      <h4>🚄 10/6 高铁 · 萍乡北 → 长沙南</h4>
+      <h4><span class="tile"><svg class="ic"><use href="#i-train"/></svg></span><span class="htxt">10/6 高铁 · 萍乡北 → 长沙南</span></h4>
       <p>建议选 <b>15:00–17:00 到达长沙南</b> 的车次,54.5 元/人。国庆返程紧,<b>买好再玩</b>;没票就 12306 挂候补。</p>
       <div class="copy-row">
         <a class="linkbtn" target="_blank" href="https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E8%90%8D%E4%B9%A1%E5%8C%97,PBG&ts=%E9%95%BF%E6%B2%99%E5%8D%97,CWQ&date=2026-10-06&flag=N,N,Y">12306 查 10/6 车次·购票</a>
@@ -483,29 +531,29 @@
       </div>
     </div>
     <div class="card">
-      <h4>🏛 湖南博物院 · 免费 <span class="pill rob">需抢</span></h4>
+      <h4><span class="tile"><svg class="ic"><use href="#i-museum"/></svg></span><span class="htxt">湖南博物院 · 免费</span><span class="pill rob">需抢</span></h4>
       <p>10/5 门票:<b>9/28 起每晚 20:00</b> 进小程序试约(提前 5/7 天两种口径都试),约不到挂候补,白天捡退票。</p>
       <div class="copy-row">
-        <button class="copy" data-copy="#小程序://湖南省博物馆/3O0fIEOxKj3rhSm">📲 复制口令·跳微信</button>
+        <button class="copy" data-copy="#小程序://湖南省博物馆/3O0fIEOxKj3rhSm">复制口令,跳微信</button>
         <a class="linkbtn" target="_blank" href="https://yuyues.hnmuseum.com/">官网预约</a>
       </div>
     </div>
     <div class="card">
-      <h4>🏝 橘子洲 · 免费 <span class="pill rob">需约</span></h4>
+      <h4><span class="tile t-teal"><svg class="ic"><use href="#i-tree"/></svg></span><span class="htxt">橘子洲 · 免费</span><span class="pill rob">需约</span></h4>
       <p>10/4 预约:<b>10/1 早 7:00 起</b>开放(提前 3 天),7:00–22:00 随机放票+退票回池,早中晚多刷。4 人全部实名。</p>
       <div class="copy-row">
-        <button class="copy" data-copy="#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k">📲 复制口令·跳微信</button>
+        <button class="copy" data-copy="#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k">复制口令,跳微信</button>
       </div>
     </div>
     <div class="card">
-      <h4>⛰ 武功山门票 · 70 元/人</h4>
+      <h4><span class="tile t-purple"><svg class="ic"><use href="#i-mount"/></svg></span><span class="htxt">武功山门票 · 70 元/人</span></h4>
       <p>无网页直售:在<b>微信公众号「萍乡武功山」</b>或<b>美团/携程 App</b> 搜「武功山门票」购买(夜爬当晚 22:00 前有效),学生证约 50 元。索道票到山下窗口/扫码另购。</p>
       <div class="copy-row">
         <span class="copy-chip"><span>微信搜索:萍乡武功山</span></span>
       </div>
     </div>
     <div class="card">
-      <h4>🦶 足浴过夜 · 约 150 元/人</h4>
+      <h4><span class="tile t-teal"><svg class="ic"><use href="#i-drop"/></svg></span><span class="htxt">足浴过夜 · 约 150 元/人</span></h4>
       <p>美团/点评 App 搜:<b>「长沙 足浴 24小时 可过夜」</b>,候选:金色印象 / 碧海云天(约139元含三餐+过夜)/ 汤乐泉。<b>下单前电话确认可过夜</b>。</p>
     </div>
   </div>
@@ -516,19 +564,19 @@
 <section class="panel" id="panel-wugong">
   <div class="grid">
     <div class="card">
-      <h4>🌙 夜爬节奏(正常体力)</h4>
+      <h4><span class="tile t-purple"><svg class="ic"><use href="#i-moon"/></svg></span><span class="htxt">夜爬节奏(正常体力)</span></h4>
       <p><b>22:00</b> 石鼓寺出发 → <b>23:30</b> 好汉坡(开始陡)→ <b>01:00</b> 中庵索道上站 → <b>02:30</b> 金顶索道上站 → <b>03:30–04:30</b> 金顶占位 → <b>06:15</b> 日出。<br>慢而不断,每小时歇10分钟,<b>4人全程结伴</b>。</p>
     </div>
     <div class="card">
-      <h4>🎫 门票 & 索道</h4>
+      <h4><span class="tile"><svg class="ic"><use href="#i-ticket"/></svg></span><span class="htxt">门票与索道</span></h4>
       <p>门票 <b>70 元/人</b>(学生约50)· 金顶索道 上/下行各35 · 中庵索道 上65/下50 · 军大衣租赁约30–50。夜爬只用到<b>下行</b>;运营时间以景区当日公告为准。</p>
     </div>
     <div class="card">
-      <h4>🎒 背包清单(一人一份)</h4>
+      <h4><span class="tile t-teal"><svg class="ic"><use href="#i-bag"/></svg></span><span class="htxt">背包清单(一人一份)</span></h4>
       <p>必带:<b>头灯/手电</b>、防滑登山鞋、<b>厚外套或薄羽绒</b>、雨衣、充电宝、水1L+电解质、高热量零食、身份证。<br>建议:登山杖(山下2元竹棍)、手套、保温杯(山顶免费热水)、少量现金、防晒。</p>
     </div>
     <div class="card">
-      <h4>⚠️ 夜爬红线</h4>
+      <h4><span class="tile t-red"><svg class="ic"><use href="#i-alert"/></svg></span><span class="htxt">夜爬红线</span></h4>
       <p>山顶夜间 <b>5–10℃ 且风大</b>,到顶立刻加衣防失温,湿了速换;手机低温掉电快,<b>贴身放</b>;只走主步道,有人不舒服就近求助,<b>量力放弃不丢人</b>;雨大风大果断改白天索道上山。</p>
     </div>
   </div>
@@ -561,19 +609,19 @@
 <section class="panel" id="panel-food">
   <div class="grid">
     <div class="card">
-      <h4>🏨 酒店周边(银盆岭·河西)</h4>
+      <h4><span class="tile"><svg class="ic"><use href="#i-home"/></svg></span><span class="htxt">酒店周边(银盆岭·河西)</span></h4>
       <p><b>渔人码头</b>:江边夜宵街,小龙虾、烧烤配夜景<br><b>长沙米粉</b>:每天早上来一碗</p>
     </div>
     <div class="card">
-      <h4>🏝 河东经典(顺路可加)</h4>
+      <h4><span class="tile"><svg class="ic"><use href="#i-pin"/></svg></span><span class="htxt">河东经典(顺路可加)</span></h4>
       <p><b>茶颜悦色</b>:幽兰拿铁、声声乌龙<br><b>黑色经典臭豆腐</b>:配糖油粑粑<br><b>费大厨/炊烟</b>:辣椒炒肉、小炒黄牛肉,先取号<br><b>火宫殿(坡子街)</b>:老字号小吃合集<br><b>文和友(海信广场)</b>:复古场景,排队狠酌情</p>
     </div>
     <div class="card">
-      <h4>🎓 大学城 / 后湖(D2晚)</h4>
+      <h4><span class="tile t-teal"><svg class="ic"><use href="#i-book"/></svg></span><span class="htxt">大学城 / 后湖(D2晚)</span></h4>
       <p><b>登高路小吃街</b>:岳麓山下臭豆腐、糖油粑粑、凉面<br><b>麓山南路</b>:学生街平价小吃<br><b>后湖艺术区咖啡</b>:夜景收尾最舒服</p>
     </div>
     <div class="card">
-      <h4>⛰ 萍乡 / 武功山(D3–D4)</h4>
+      <h4><span class="tile t-purple"><svg class="ic"><use href="#i-mount"/></svg></span><span class="htxt">萍乡 / 武功山(D3–D4)</span></h4>
       <p><b>上山前</b>:山下吃顿好的,萍乡小炒肉、莲花血鸭<br><b>爬山补给</b>:士力架、坚果、电解质水<br><b>下山后</b>:民宿附近农家菜热乎饭</p>
     </div>
   </div>
@@ -583,27 +631,27 @@
 <section class="panel" id="panel-tips">
   <div class="grid">
     <div class="card">
-      <h4>🪪 身份证 = 全程通行证</h4>
+      <h4><span class="tile t-red"><svg class="ic"><use href="#i-shield"/></svg></span><span class="htxt">身份证 = 全程通行证</span></h4>
       <p>省博、橘子洲、高铁、武功山、足浴全实名,<b>4 人身份证原件随身</b>,预约信息提前录进小程序。</p>
     </div>
     <div class="card">
-      <h4>🌤 天气</h4>
+      <h4><span class="tile"><svg class="ic"><use href="#i-cloud"/></svg></span><span class="htxt">天气</span></h4>
       <p>出发前 3 天查长沙+萍乡+武功山三地;国庆偶有降雨,<b>雨衣比伞好用</b>(夜爬必备);日出约 6:15 以当日预报为准。</p>
     </div>
     <div class="card">
-      <h4>🔋 电量管理</h4>
+      <h4><span class="tile t-teal"><svg class="ic"><use href="#i-batt"/></svg></span><span class="htxt">电量管理</span></h4>
       <p>每人一个充电宝起步,夜爬那晚手机省着用(低温掉电快);足浴店睡前全部充满。</p>
     </div>
     <div class="card">
-      <h4>🏥 紧急联系</h4>
+      <h4><span class="tile t-purple"><svg class="ic"><use href="#i-phone"/></svg></span><span class="htxt">紧急联系</span></h4>
       <p>报警 110 · 急救 120 · 高铁客服 12306;两间民宿电话在 D1/D3 页,存进通讯录。</p>
     </div>
     <div class="card">
-      <h4>🎫 抢票心法</h4>
+      <h4><span class="tile"><svg class="ic"><use href="#i-ticket"/></svg></span><span class="htxt">抢票心法</span></h4>
       <p>省博:每晚 20:00 守 + 白天捡退票 + 挂候补;橘子洲:开放日起全天多刷;高铁:现在就买。</p>
     </div>
     <div class="card">
-      <h4>👟 体力分配</h4>
+      <h4><span class="tile t-teal"><svg class="ic"><use href="#i-act"/></svg></span><span class="htxt">体力分配</span></h4>
       <p>D3 白天别暴走,晚饭吃饱;夜爬 4 人结伴、慢而不断;D4 索道下山别逞强。</p>
     </div>
   </div>
@@ -655,10 +703,10 @@ document.querySelectorAll('button.copy').forEach(function(btn){
     var text = btn.getAttribute('data-copy');
     function done(){
       var old = btn.textContent;
-      btn.textContent = '✓ 已复制'; btn.classList.add('ok');
+      btn.textContent = '已复制'; btn.classList.add('ok');
       setTimeout(function(){ btn.textContent = old; btn.classList.remove('ok'); }, 1600);
       if(text.indexOf('#小程序://')===0){
-        showToast('✅ 口令已复制,正在拉起微信…<br>若顶部弹出口令气泡 → 点它直达;没弹出的话:打开微信 → 顶部搜索框 → 粘贴 → 点第一个结果');
+        showToast('口令已复制,正在拉起微信…<br>若顶部弹出口令气泡,点它直达;没弹出的话:打开微信 → 顶部搜索框 → 粘贴 → 点第一个结果');
         if(/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)){
           setTimeout(function(){ window.location.href = 'weixin://'; }, 450);
         }
@@ -756,7 +804,7 @@ function ensureMap(){
   const s=document.createElement('script');
   s.src='https://webapi.amap.com/maps?v=2.0&key='+MAP_KEY;
   s.onload=initMap;
-  s.onerror=function(){document.getElementById('mapHint').textContent='⚠️ 地图脚本加载失败,请检查网络后刷新重试。';};
+  s.onerror=function(){document.getElementById('mapHint').textContent='地图脚本加载失败,请检查网络后刷新重试。';};
   document.head.appendChild(s);
 }
 function initMap(){
@@ -772,7 +820,7 @@ function addMarker(coord,n,label,desc){
   const m=new AMap.Marker({position:coord,content:el,anchor:'bottom-center',zIndex:60});
   if(desc){
     m.on('click',function(){
-      new AMap.InfoWindow({content:'<div style="font-size:13px;line-height:1.6;max-width:250px;"><b>'+label+'</b><br>'+desc+'<br><a class="navbtn" target="_blank" href="https://uri.amap.com/navigation?to='+coord[0]+','+coord[1]+','+encodeURIComponent(label)+'&mode=car&coordinate=gaode&callnative=1&src=tripguide">🧭 导航去这里</a></div>',offset:new AMap.Pixel(0,-4)}).open(mapObj,m.getPosition());
+      new AMap.InfoWindow({content:'<div style="font-size:13px;line-height:1.6;max-width:250px;"><b>'+label+'</b><br>'+desc+'<br><a class="navbtn" target="_blank" href="https://uri.amap.com/navigation?to='+coord[0]+','+coord[1]+','+encodeURIComponent(label)+'&mode=car&coordinate=gaode&callnative=1&src=tripguide">导航去这里</a></div>',offset:new AMap.Pixel(0,-4)}).open(mapObj,m.getPosition());
     });
   }
   mapObj.add(m);overlays.push(m);
@@ -782,8 +830,34 @@ function addLine(pts,st){
   mapObj.add(l);overlays.push(l);
 }
 function straight(rt){
-  const S={transit:{color:'#4f6bd6',weight:4,dashArray:[10,5]},drive:{color:'#12897b',weight:4},rail:{color:'#7a63b5',weight:4.5,dashArray:[14,8]},walk:{color:'#948676',weight:3,opacity:.8},cable:{color:'#f4692e',weight:3.5,dashArray:[2,7]}}[rt.mode];
+  const S={transit:{color:'#2563eb',weight:4,dashArray:[10,5]},drive:{color:'#0e7c70',weight:4},rail:{color:'#6941c6',weight:4.5,dashArray:[14,8]},walk:{color:'#697380',weight:3,opacity:.8},cable:{color:'#e8590c',weight:3.5,dashArray:[2,7]}}[rt.mode];
   addLine([POI[rt.from],POI[rt.to]],S);
+}
+function hav(a,b){const R=6371000,r=Math.PI/180,dLa=(b[1]-a[1])*r,dLo=(b[0]-a[0])*r,s=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a[1]*r)*Math.cos(b[1]*r)*Math.sin(dLo/2)*Math.sin(dLo/2);return 2*R*Math.asin(Math.sqrt(s));}
+function estMeta(rt){
+  const d=hav(POI[rt.from],POI[rt.to]);
+  if(rt.mode==='rail')return{t:'约30分',d:(d*1.3/1000).toFixed(1)+'km'};
+  if(rt.mode==='cable')return{t:'约12分',d:(d/1000).toFixed(1)+'km'};
+  const E={transit:[1.35,300],drive:[1.3,500],walk:[1.25,75]}[rt.mode];
+  return{t:'约'+Math.max(3,Math.round(d*E[0]/E[1]))+'分',d:(d*E[0]/1000).toFixed(1)+'km'};
+}
+async function drawRoute(rt){
+  const M={transit:'地铁',drive:'驾车',rail:'高铁',walk:'步行',cable:'索道',hike:'徒步'};
+  function meta(t,d){return{icon:M[rt.mode],from:rt.from,to:rt.to,t:t,d:d};}
+  if(rt.mode==='hike'){
+    addLine(rt.via.map(function(k){return POI[k];}),{color:'#d92d20',weight:6,dir:true,outline:true});
+    let d=0;for(let i=1;i<rt.via.length;i++){d+=hav(POI[rt.via[i-1]],POI[rt.via[i]]);}
+    return meta('5–6小时',(d*1.15/1000).toFixed(1)+'km');
+  }
+  if(rt.mode==='rail'||rt.mode==='cable'||rt.mode==='walk'){
+    straight(rt);
+    const m=estMeta(rt);return meta(m.t,m.d);
+  }
+  const res=await planRoute(rt);
+  if(res&&res.ok)return meta('约'+res.time+'分',(res.dist/1000).toFixed(1)+'km');
+  straight(rt);
+  const m=estMeta(rt);
+  return meta(m.t,m.d);
 }
 function planRoute(rt){
   return new Promise(function(res){
@@ -803,7 +877,7 @@ function planRoute(rt){
             else if(r.steps){r.steps.forEach(function(st){(st.path||[]).forEach(function(ll){pts.push(ll);});});}
           }
           if(pts.length>1){
-            addLine(pts,rt.mode==='transit'?{color:'#4f6bd6',weight:4,dashArray:[10,5]}:{color:'#12897b',weight:4});
+            addLine(pts,rt.mode==='transit'?{color:'#2563eb',weight:4,dashArray:[10,5]}:{color:'#0e7c70',weight:4});
             let meters=0;
             const L=function(p){return[p.lng!==undefined?p.lng:p.getLng(),p.lat!==undefined?p.lat:p.getLat()];};
             for(let i=1;i<pts.length;i++){meters+=hav(L(pts[i-1]),L(pts[i]));}
@@ -817,32 +891,6 @@ function planRoute(rt){
     });
   });
 }
-function hav(a,b){const R=6371000,r=Math.PI/180,dLa=(b[1]-a[1])*r,dLo=(b[0]-a[0])*r,s=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a[1]*r)*Math.cos(b[1]*r)*Math.sin(dLo/2)*Math.sin(dLo/2);return 2*R*Math.asin(Math.sqrt(s));}
-function estMeta(rt){
-  const d=hav(POI[rt.from],POI[rt.to]);
-  if(rt.mode==='rail')return{t:'约30分',d:(d*1.3/1000).toFixed(1)+'km'};
-  if(rt.mode==='cable')return{t:'约12分',d:(d/1000).toFixed(1)+'km'};
-  const E={transit:[1.35,300],drive:[1.3,500],walk:[1.25,75]}[rt.mode];
-  return{t:'约'+Math.max(3,Math.round(d*E[0]/E[1]))+'分',d:(d*E[0]/1000).toFixed(1)+'km'};
-}
-async function drawRoute(rt){
-  const M={transit:'🚇',drive:'🚗',rail:'🚄',walk:'🚶',cable:'🚡',hike:'🥾'};
-  function meta(t,d){return{icon:M[rt.mode],from:rt.from,to:rt.to,t:t,d:d};}
-  if(rt.mode==='hike'){
-    addLine(rt.via.map(function(k){return POI[k];}),{color:'#d94f14',weight:6,dir:true,outline:true});
-    let d=0;for(let i=1;i<rt.via.length;i++){d+=hav(POI[rt.via[i-1]],POI[rt.via[i]]);}
-    return meta('5–6小时',(d*1.15/1000).toFixed(1)+'km');
-  }
-  if(rt.mode==='rail'||rt.mode==='cable'||rt.mode==='walk'){
-    straight(rt);
-    const m=estMeta(rt);return meta(m.t,m.d);
-  }
-  const res=await planRoute(rt);
-  if(res&&res.ok)return meta('约'+res.time+'分',(res.dist/1000).toFixed(1)+'km');
-  straight(rt);
-  const m=estMeta(rt);
-  return meta(m.t,m.d);
-}
 function renderDay(dk){
   curMDay=dk;
   if(!mapReady)return;
@@ -850,11 +898,11 @@ function renderDay(dk){
   const d=DAYS[dk];
   d.m.forEach(function(mk,i){addMarker(POI[mk[0]],i+1,mk[1],mk[2]);});
   const sumEl=document.getElementById('routeSummary');
-  if(sumEl)sumEl.innerHTML=(d.r&&d.r.length)?'<span>⏳ 正在计算实时路程…</span>':'<span>当天自由安排:足浴店 → 地铁2号线 → 长沙南站,提前 1 小时到站。</span>';
+  if(sumEl)sumEl.innerHTML=(d.r&&d.r.length)?'<span>正在计算实时路程…</span>':'<span>当天自由安排:足浴店 → 地铁2号线 → 长沙南站,提前 1 小时到站。</span>';
   Promise.all((d.r||[]).map(function(rt){return drawRoute(rt);})).then(function(metas){
     if(sumEl&&metas.length){
       sumEl.innerHTML=metas.map(function(m){
-        return '<span>'+m.icon+' '+LABELS[m.from]+' → '+LABELS[m.to]+' · '+m.t+(m.d?' · '+m.d:'')+'</span>';
+        return '<span><i class="mm">'+m.icon+'</i>'+LABELS[m.from]+' → '+LABELS[m.to]+' · '+m.t+(m.d?' · '+m.d:'')+'</span>';
       }).join('');
     }
   });
@@ -878,11 +926,11 @@ function setLayer(sat){
 
 /* ---- countdowns ---- */
 function fmt(ms){
-  if (ms <= 0) return '该行动啦！';
+  if (ms <= 0) return '该行动啦!';
   var d = Math.floor(ms/86400000), h = Math.floor(ms%86400000/3600000), m = Math.floor(ms%3600000/60000);
   if (d > 0) return d + '天' + h + '小时后';
   if (h > 0) return h + '小时' + m + '分后';
-  return '只剩' + m + '分钟！';
+  return '只剩' + m + '分钟!';
 }
 function tick(){
   var now = Date.now(), nearest = null;
@@ -897,19 +945,19 @@ function tick(){
     var d = new Date(nearest.t);
     var label = nearest.el.closest('.card').querySelector('.what').textContent.trim();
     var when = (d.getMonth()+1) + '月' + d.getDate() + '日 ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-    bar.innerHTML = '⏰ 最近节点:<b>' + when + ' ' + label.replace(/^.*?]\s*/, '') + '</b>(还有 ' + Math.floor((nearest.t-now)/3600000) + ' 小时)· 点击查看';
+    bar.innerHTML = '<svg class="ic"><use href="#i-bell"/></svg> 最近节点:<b>' + when + ' ' + label + '</b>(还有 ' + Math.floor((nearest.t-now)/3600000) + ' 小时)· 点击查看';
   } else {
-    bar.textContent = '⏰ 所有开抢节点已过——玩得开心!';
+    bar.textContent = '所有开抢节点已过——玩得开心!';
   }
 }
 tick(); setInterval(tick, 30000);
 
 /* ---- weather (Open-Meteo, 免Key) ---- */
 function wEmoji(c){
-  if(c===0)return['☀️'];if(c<=2)return['🌤️'];if(c===3)return['☁️'];
-  if(c<=48)return['🌫️'];if(c<=57)return['🌦️'];if(c<=67)return['🌧️'];
-  if(c<=77)return['🌨️'];if(c<=82)return['🌧️'];if(c<=86)return['🌨️'];
-  return['⛈️'];
+  if(c===0)return'☀';if(c<=2)return'⛅';if(c===3)return'☁';
+  if(c<=48)return'雾';if(c<=57)return'🌦';if(c<=67)return'雨';
+  if(c<=77)return'雪';if(c<=82)return'阵雨';if(c<=86)return'阵雪';
+  return'雷雨';
 }
 async function loadWeather(){
   const box=document.getElementById('wxBox');if(!box)return;
