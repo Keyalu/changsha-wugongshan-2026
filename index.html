@@ -164,6 +164,7 @@
   .wd .c b{display:block;font-size:17px;}
   .wd .c .t{color:var(--ink);font-weight:700;}
   .navbtn{display:inline-block;margin-top:6px;background:var(--orange);color:#fff;border-radius:7px;padding:3px 10px;font-size:12px;font-weight:700;text-decoration:none;}
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:rgba(40,30,20,.93);color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;line-height:1.55;max-width:86vw;z-index:99;display:none;box-shadow:0 4px 16px rgba(0,0,0,.28);}
   @media (max-width:640px){
     header.top h1{font-size:20px;}
     table{display:block;overflow-x:auto;}
@@ -266,7 +267,7 @@
       <div class="what"><span class="pill rob">主抢场</span> 🏛 省博 10/5 门票</div>
       <div class="how">多数攻略口径「<b>提前5天、每晚20:00放票</b>」——必抢。9/28 起每晚都试,白天刷退票。</div>
       <div class="copy-row">
-        <button class="copy" data-copy="#小程序://湖南省博物馆/3O0fIEOxKj3rhSm">复制小程序口令</button>
+        <button class="copy" data-copy="#小程序://湖南省博物馆/3O0fIEOxKj3rhSm">📲 复制口令·跳微信</button>
         <span class="copy-chip"><span>#小程序://湖南省博物馆/3O0fIEOxKj3rhSm</span></span>
       </div>
     </div>
@@ -276,7 +277,7 @@
       <div class="what"><span class="pill rob">预约开放日</span> 🏝 橘子洲 10/4 预约(提前3天)</div>
       <div class="how">不是固定时刻放票:<b>7:00–22:00 随机放票 + 退票回池</b>(本地宝 9/23 更新)。10/1 起<b>早中晚多刷</b>,10/2–10/3 捡漏。4 人全部实名。</div>
       <div class="copy-row">
-        <button class="copy" data-copy="#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k">复制小程序口令</button>
+        <button class="copy" data-copy="#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k">📲 复制口令·跳微信</button>
         <span class="copy-chip"><span>#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k</span></span>
       </div>
     </div>
@@ -294,7 +295,7 @@
     </div>
 
   </div>
-  <p class="hint">💡 口令用法:点「复制」→ 微信发给<b>文件传输助手</b> → 点开直达小程序。省博也可走公众号「湖南省博物馆」或官网 yuyues.hnmuseum.com。</p>
+  <p class="hint">💡 口令用法:手机上点「📲 复制口令·跳微信」会自动复制并拉起微信——顶部若弹出口令气泡,点它直达小程序;没弹出就打开微信,在顶部搜索框粘贴口令,点第一个结果。省博也可走公众号「湖南省博物馆」或官网 yuyues.hnmuseum.com。</p>
 </section>
 
 <!-- ================= 每日行程 ================= -->
@@ -485,7 +486,7 @@
       <h4>🏛 湖南博物院 · 免费 <span class="pill rob">需抢</span></h4>
       <p>10/5 门票:<b>9/28 起每晚 20:00</b> 进小程序试约(提前 5/7 天两种口径都试),约不到挂候补,白天捡退票。</p>
       <div class="copy-row">
-        <button class="copy" data-copy="#小程序://湖南省博物馆/3O0fIEOxKj3rhSm">复制小程序口令</button>
+        <button class="copy" data-copy="#小程序://湖南省博物馆/3O0fIEOxKj3rhSm">📲 复制口令·跳微信</button>
         <a class="linkbtn" target="_blank" href="https://yuyues.hnmuseum.com/">官网预约</a>
       </div>
     </div>
@@ -493,7 +494,7 @@
       <h4>🏝 橘子洲 · 免费 <span class="pill rob">需约</span></h4>
       <p>10/4 预约:<b>10/1 早 7:00 起</b>开放(提前 3 天),7:00–22:00 随机放票+退票回池,早中晚多刷。4 人全部实名。</p>
       <div class="copy-row">
-        <button class="copy" data-copy="#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k">复制小程序口令</button>
+        <button class="copy" data-copy="#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k">📲 复制口令·跳微信</button>
       </div>
     </div>
     <div class="card">
@@ -610,6 +611,8 @@
 
 </main>
 
+<div id="toast"></div>
+
 <footer class="wrap">
   私人定制行程导览 · 预约规则/价格/班次核验于 2026-09-26,出行前以官方小程序与景区公告为准。<br>
   来源:长沙本地宝 · 湖南博物院官方通告 · 长沙晚报 · 武功山景区公开信息 · 12306 · 路线规划与地图底图由高德地图提供
@@ -640,6 +643,13 @@ daynav.addEventListener('click', function(e){
 });
 
 /* ---- copy buttons ---- */
+var toastTimer=null;
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.innerHTML=msg;t.style.display='block';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){t.style.display='none';},5000);
+}
 document.querySelectorAll('button.copy').forEach(function(btn){
   btn.addEventListener('click', function(){
     var text = btn.getAttribute('data-copy');
@@ -647,6 +657,12 @@ document.querySelectorAll('button.copy').forEach(function(btn){
       var old = btn.textContent;
       btn.textContent = '✓ 已复制'; btn.classList.add('ok');
       setTimeout(function(){ btn.textContent = old; btn.classList.remove('ok'); }, 1600);
+      if(text.indexOf('#小程序://')===0){
+        showToast('✅ 口令已复制,正在拉起微信…<br>若顶部弹出口令气泡 → 点它直达;没弹出的话:打开微信 → 顶部搜索框 → 粘贴 → 点第一个结果');
+        if(/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)){
+          setTimeout(function(){ window.location.href = 'weixin://'; }, 450);
+        }
+      }
     }
     function fallback(){
       var ta = document.createElement('textarea');
