@@ -159,6 +159,14 @@
   .rs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
   .rs span{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;color:var(--ink);}
   .rs .mm{font-style:normal;background:#eef1f4;border-radius:4px;padding:0 6px;margin-right:6px;font-size:11px;font-weight:700;}
+  .rs span.seg{cursor:pointer;}
+  .rs span.seg:hover{border-color:#bcd6c6;}
+  .rs span.seg.on{border-color:#9fc7ad;background:var(--orange-soft);color:var(--orange-deep);}
+  .segbar{display:none;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center;}
+  .segbar .lbl{font-size:12px;color:var(--sub);}
+  .segbar .mopt{border:1px solid var(--line);background:#fff;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;color:var(--sub);cursor:pointer;}
+  .segbar .mopt.on{background:var(--orange-soft);border-color:#bcd6c6;color:var(--orange-deep);font-weight:800;}
+  .segbar .mopt b{color:var(--gold);margin-left:3px;font-weight:700;}
 
   /* ---------- buttons / links ---------- */
   .linkbtn{display:inline-block;background:var(--teal-soft);color:#3f7d79;border:1px solid #c5e0de;border-radius:7px;padding:5px 14px;font-size:13px;font-weight:700;text-decoration:none;}
@@ -495,10 +503,11 @@
     <div id="tripmap"></div>
   </div>
   <div class="rs" id="routeSummary"></div>
+  <div class="segbar" id="segBar"></div>
   <div class="mapbar">
     <button id="layerStd" class="on">标准图</button>
     <button id="layerSat">卫星图</button>
-    <span class="hint" style="margin:0;" id="mapHint">市内路线由高德实时规划,高铁/索道为示意线;点标点看说明。D5足浴店未定,定好后自动补线。</span>
+    <span class="hint" style="margin:0;" id="mapHint">点下方任一段可单独高亮该段路线,并为其切换 公交地铁/驾车/步行(默认公交地铁);高铁/索道/徒步为固定示意线。点标点看说明。</span>
   </div>
   <div class="lg">
     <span><b style="border-color:#8fbf9f;"></b>驾车/打车</span>
@@ -809,7 +818,15 @@ function ensureMap(){
 function initMap(){
   mapObj=new AMap.Map('tripmap',{zoom:11,center:[112.99,28.15],mapStyle:'amap://styles/whitesmoke',viewMode:'2D'});
   mapReady=true;
-  renderDay(curMDay);
+  var started=false;
+  var start=function(){
+    if(started)return;started=true;
+    mapObj.resize();
+    renderDay(curMDay);
+  };
+  mapObj.on('complete',start);
+  setTimeout(start,2500);
+  window.addEventListener('resize',function(){if(mapReady)mapObj.resize();});
 }
 function clearOverlays(){overlays.forEach(function(o){mapObj.remove(o);});overlays=[];}
 function addMarker(coord,n,label,desc){
@@ -826,11 +843,103 @@ function addMarker(coord,n,label,desc){
 }
 function addLine(pts,st){
   const l=new AMap.Polyline({path:pts,strokeColor:st.color,strokeWeight:st.weight,strokeOpacity:st.opacity!==undefined?st.opacity:.95,strokeStyle:st.dashArray?'dashed':'solid',strokeDashArray:st.dashArray||[10,5],showDir:!!st.dir,isOutline:!!st.outline,outlineColor:'#ffffff',outlineWeight:1,zIndex:40});
-  mapObj.add(l);overlays.push(l);
+  mapObj.add(l);overlays.push(l);return l;
 }
-function straight(rt){
-  const S={transit:{color:'#8aa9d4',weight:4,dashArray:[10,5]},drive:{color:'#8fbf9f',weight:4},rail:{color:'#a394d6',weight:4.5,dashArray:[14,8]},walk:{color:'#97a49d',weight:3,opacity:.85},cable:{color:'#6aa8a4',weight:3.5,dashArray:[2,7]}}[rt.mode];
-  addLine([POI[rt.from],POI[rt.to]],S);
+const FIXED=['rail','cable','hike'];
+const MODE_LABEL={transit:'公交地铁',drive:'驾车',walk:'步行',rail:'高铁(示意)',cable:'索道(示意)',hike:'徒步'};
+function segModes(rt){return FIXED.indexOf(rt.mode)>=0?[rt.mode]:['transit','drive','walk'];}
+function drawSegLine(rt,mode,pts){
+  let st,pp=pts||null;
+  if(mode==='hike'){st={color:'#c96b5d',weight:6,dir:true,outline:true};pp=rt.via.map(function(k){return POI[k];});}
+  else if(mode==='rail'){st={color:'#a394d6',weight:4.5,dashArray:[14,8]};pp=[POI[rt.from],POI[rt.to]];}
+  else if(mode==='cable'){st={color:'#6aa8a4',weight:3.5,dashArray:[2,7]};pp=[POI[rt.from],POI[rt.to]];}
+  else if(mode==='transit'){st={color:'#8aa9d4',weight:4,dashArray:[10,5]};}
+  else if(mode==='drive'){st={color:'#8fbf9f',weight:4};}
+  else{st={color:'#97a49d',weight:3,opacity:.85};}
+  if(!pp||pp.length<2)pp=[POI[rt.from],POI[rt.to]];
+  return addLine(pp,st);
+}
+function styleSegs(dk){
+  const st=segState[dk];if(!st)return;
+  st.segs.forEach(function(s,i){
+    if(s.line){
+      const w=(s.mode==='hike')?6:4;
+      s.line.setOptions({strokeOpacity:i===st.active?.95:.35,strokeWeight:i===st.active?w+1:w,zIndex:i===st.active?45:40});
+    }
+  });
+}
+function renderSegChips(dk){
+  const st=segState[dk];const el=document.getElementById('routeSummary');if(!el)return;
+  if(!st||!st.segs.length){el.innerHTML='<span>当天自由安排:足浴店 → 地铁2号线 → 长沙南站,提前 1 小时到站。</span>';return;}
+  el.innerHTML=st.segs.map(function(s,i){
+    const m=s.meta||{t:'…',d:''};
+    return '<span class="seg'+(i===st.active?' on':'')+'" data-i="'+i+'" title="点击查看该段路线"><i class="mm">'+MODE_LABEL[s.mode]+'</i>'+LABELS[s.rt.from]+' → '+LABELS[s.rt.to]+' · '+m.t+(m.d?' · '+m.d:'')+'</span>';
+  }).join('');
+}
+function renderModeBar(dk){
+  const st=segState[dk];const el=document.getElementById('segBar');if(!el)return;
+  if(!st||!st.segs.length){el.style.display='none';return;}
+  const s=st.segs[st.active];
+  el.style.display='flex';
+  if(FIXED.indexOf(s.mode)>=0){el.dataset.key='fixed';el.innerHTML='<span class="lbl">该段出行方式固定:'+MODE_LABEL[s.mode]+'</span>';return;}
+  const key=LABELS[s.rt.from]+'→'+LABELS[s.rt.to];
+  const opts=segModes(s.rt).map(function(mo){
+    const t=s.times[mo];
+    return '<span class="mopt'+(mo===s.mode?' on':'')+'" data-m="'+mo+'">'+MODE_LABEL[mo]+(t?'<b>'+t.t+'</b>':'')+'</span>';
+  }).join('');
+  if(el.dataset.key===key){
+    el.querySelectorAll('.mopt').forEach(function(o){
+      const mo=o.getAttribute('data-m');
+      o.classList.toggle('on',mo===s.mode);
+      const t=s.times[mo];
+      o.innerHTML=MODE_LABEL[mo]+(t?'<b>'+t.t+'</b>':'');
+    });
+  }else{
+    el.dataset.key=key;
+    el.innerHTML='<span class="lbl">「'+key+'」出行方式:</span>'+opts;
+  }
+}
+function loadSeg(dk,i){
+  const st=segState[dk],s=st.segs[i];
+  if(s.line){mapObj.remove(s.line);s.line=null;}
+  const rt=Object.assign({},s.rt,{mode:s.mode});
+  if(FIXED.indexOf(s.mode)>=0){
+    s.line=drawSegLine(rt,s.mode,null);
+    const m=estMeta(rt);s.meta={t:m.t,d:m.d};
+    return Promise.resolve();
+  }
+  return planRoute(rt).then(function(res){
+    if(res&&res.ok){
+      s.line=drawSegLine(rt,s.mode,res.pts);
+      s.meta={t:'约'+res.time+'分',d:(res.dist/1000).toFixed(1)+'km'};
+      s.times[s.mode]={t:'约'+res.time+'分',d:(res.dist/1000).toFixed(1)+'km'};
+    }else{
+      s.line=drawSegLine(rt,s.mode,null);
+      const m=estMeta(rt);s.meta={t:m.t,d:m.d};
+    }
+  });
+}
+function activateSeg(dk,i){
+  const st=segState[dk];if(!st||!st.segs[i])return;
+  st.active=i;
+  styleSegs(dk);renderSegChips(dk);renderModeBar(dk);
+  const s=st.segs[i];
+  if(FIXED.indexOf(s.mode)>=0)return;
+  segModes(s.rt).forEach(function(mo){
+    if(s.times[mo])return;
+    const rt=Object.assign({},s.rt,{mode:mo});
+    planRoute(rt).then(function(res){
+      if(res&&res.ok){s.times[mo]={t:'约'+res.time+'分',d:(res.dist/1000).toFixed(1)+'km'};renderModeBar(dk);}
+    });
+  });
+}
+function setSegMode(dk,i,mo){
+  const st=segState[dk];if(!st||!st.segs[i])return;
+  const s=st.segs[i];
+  if(s.mode===mo)return;
+  s.mode=mo;
+  renderModeBar(dk);
+  loadSeg(dk,i).then(function(){styleSegs(dk);renderSegChips(dk);renderModeBar(dk);});
 }
 function hav(a,b){const R=6371000,r=Math.PI/180,dLa=(b[1]-a[1])*r,dLo=(b[0]-a[0])*r,s=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a[1]*r)*Math.cos(b[1]*r)*Math.sin(dLo/2)*Math.sin(dLo/2);return 2*R*Math.asin(Math.sqrt(s));}
 function estMeta(rt){
@@ -840,49 +949,33 @@ function estMeta(rt){
   const E={transit:[1.35,300],drive:[1.3,500],walk:[1.25,75]}[rt.mode];
   return{t:'约'+Math.max(3,Math.round(d*E[0]/E[1]))+'分',d:(d*E[0]/1000).toFixed(1)+'km'};
 }
-async function drawRoute(rt){
-  const M={transit:'地铁',drive:'驾车',rail:'高铁',walk:'步行',cable:'索道',hike:'徒步'};
-  function meta(t,d){return{icon:M[rt.mode],from:rt.from,to:rt.to,t:t,d:d};}
-  if(rt.mode==='hike'){
-    addLine(rt.via.map(function(k){return POI[k];}),{color:'#c96b5d',weight:6,dir:true,outline:true});
-    let d=0;for(let i=1;i<rt.via.length;i++){d+=hav(POI[rt.via[i-1]],POI[rt.via[i]]);}
-    return meta('5–6小时',(d*1.15/1000).toFixed(1)+'km');
-  }
-  if(rt.mode==='rail'||rt.mode==='cable'||rt.mode==='walk'){
-    straight(rt);
-    const m=estMeta(rt);return meta(m.t,m.d);
-  }
-  const res=await planRoute(rt);
-  if(res&&res.ok)return meta('约'+res.time+'分',(res.dist/1000).toFixed(1)+'km');
-  straight(rt);
-  const m=estMeta(rt);
-  return meta(m.t,m.d);
-}
 function planRoute(rt){
+  const kind=rt.mode;
   return new Promise(function(res){
     let done=false;const fin=function(v){if(!done){done=true;res(v);}};
     setTimeout(function(){fin(false);},9000);
-    AMap.plugin(rt.mode==='transit'?'AMap.Transfer':'AMap.Driving',function(){
-      const planner=rt.mode==='transit'?new AMap.Transfer({city:rt.city||'长沙',cityd:rt.city||'长沙'}):new AMap.Driving({policy:0});
+    AMap.plugin(kind==='transit'?'AMap.Transfer':(kind==='walk'?'AMap.Walking':'AMap.Driving'),function(){
+      const planner=kind==='transit'?new AMap.Transfer({city:rt.city||'长沙',cityd:rt.city||'长沙'}):(kind==='walk'?new AMap.Walking():new AMap.Driving({policy:0}));
       planner.search(new AMap.LngLat(POI[rt.from][0],POI[rt.from][1]),new AMap.LngLat(POI[rt.to][0],POI[rt.to][1]),function(status,result){
         try{
           let pts=[];
-          if(rt.mode==='transit'&&status==='complete'&&result.plans&&result.plans[0]){
+          if(kind==='transit'&&status==='complete'&&result.plans&&result.plans[0]){
             const p=result.plans[0].path;
             if(p&&p.length>1){pts=p;}
-          }else if(rt.mode==='drive'&&status==='complete'&&result.routes&&result.routes[0]){
+          }else if((kind==='drive'||kind==='walk')&&status==='complete'&&result.routes&&result.routes[0]){
             const r=result.routes[0];
             if(r.path&&r.path.length>1){pts=r.path;}
             else if(r.steps){r.steps.forEach(function(st){(st.path||[]).forEach(function(ll){pts.push(ll);});});}
           }
           if(pts.length>1){
-            addLine(pts,rt.mode==='transit'?{color:'#8aa9d4',weight:4,dashArray:[10,5]}:{color:'#8fbf9f',weight:4});
             let meters=0;
             const L=function(p){return[p.lng!==undefined?p.lng:p.getLng(),p.lat!==undefined?p.lat:p.getLat()];};
             for(let i=1;i<pts.length;i++){meters+=hav(L(pts[i-1]),L(pts[i]));}
-            const plan=(rt.mode==='transit'&&result.plans&&result.plans[0])?result.plans[0]:null;
-            const mins=plan&&plan.time?Math.round(plan.time/60):Math.max(3,Math.round(meters/500));
-            return fin({ok:true,time:mins,dist:meters});
+            let mins;
+            if(kind==='transit'&&result.plans[0].time)mins=Math.round(result.plans[0].time/60);
+            else if(result.routes&&result.routes[0]&&result.routes[0].time)mins=Math.round(result.routes[0].time/60);
+            else mins=Math.max(3,Math.round(meters/(kind==='walk'?75:500)));
+            return fin({ok:true,time:mins,dist:meters,pts:pts});
           }
         }catch(e){}
         fin(false);
@@ -890,20 +983,21 @@ function planRoute(rt){
     });
   });
 }
+let segState={};
 function renderDay(dk){
   curMDay=dk;
   if(!mapReady)return;
   clearOverlays();
   const d=DAYS[dk];
   d.m.forEach(function(mk,i){addMarker(POI[mk[0]],i+1,mk[1],mk[2]);});
-  const sumEl=document.getElementById('routeSummary');
-  if(sumEl)sumEl.innerHTML=(d.r&&d.r.length)?'<span>正在计算实时路程…</span>':'<span>当天自由安排:足浴店 → 地铁2号线 → 长沙南站,提前 1 小时到站。</span>';
-  Promise.all((d.r||[]).map(function(rt){return drawRoute(rt);})).then(function(metas){
-    if(sumEl&&metas.length){
-      sumEl.innerHTML=metas.map(function(m){
-        return '<span><i class="mm">'+m.icon+'</i>'+LABELS[m.from]+' → '+LABELS[m.to]+' · '+m.t+(m.d?' · '+m.d:'')+'</span>';
-      }).join('');
-    }
+  segState[dk]={active:0,segs:(d.r||[]).map(function(rt){
+    return{rt:rt,mode:FIXED.indexOf(rt.mode)>=0?rt.mode:'transit',meta:null,line:null,times:{}};
+  })};
+  renderSegChips(dk);renderModeBar(dk);
+  const st=segState[dk];
+  if(!st.segs.length)return;
+  Promise.all(st.segs.map(function(s,i){return loadSeg(dk,i);})).then(function(){
+    styleSegs(dk);renderSegChips(dk);
   });
   setTimeout(function(){mapObj.setFitView(null,false,[70,70,70,70],15);},250);
 }
@@ -912,6 +1006,15 @@ mapnav.addEventListener('click',function(e){
   var b=e.target.closest('button');if(!b)return;
   mapnav.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});
   renderDay(b.dataset.mday);
+});
+document.getElementById('routeSummary').addEventListener('click',function(e){
+  var c=e.target.closest('.seg');if(!c)return;
+  activateSeg(curMDay,parseInt(c.dataset.i,10));
+});
+document.getElementById('segBar').addEventListener('click',function(e){
+  var m=e.target.closest('.mopt');if(!m)return;
+  var st=segState[curMDay];if(!st)return;
+  setSegMode(curMDay,st.active,m.dataset.m);
 });
 document.getElementById('layerStd').addEventListener('click',function(){setLayer(false);});
 document.getElementById('layerSat').addEventListener('click',function(){setLayer(true);});
