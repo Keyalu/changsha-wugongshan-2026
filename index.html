@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>长沙·武功山 · 4人5日导览</title>
+<style>
+  :root{
+    --bg:#f8f6f2; --card:#ffffff; --ink:#33291f; --sub:#948676;
+    --orange:#f4692e; --orange-deep:#d94f14; --orange-soft:#fff1e8;
+    --teal:#12897b; --teal-soft:#e4f4f1;
+    --red:#d63b2f; --red-soft:#fdeeeb;
+    --gold:#b98314; --gold-soft:#faf3e0;
+    --line:#eae3d8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.65;font-size:15px;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 16px;}
+
+  /* ---------- header ---------- */
+  header.top{padding:26px 0 4px;}
+  header.top h1{font-size:24px;letter-spacing:.5px;}
+  header.top h1 .hl{color:var(--orange);}
+  header.top .meta{color:var(--sub);font-size:13px;margin-top:2px;}
+  .next-alarm{
+    margin-top:12px;background:var(--orange);color:#fff;border-radius:12px;
+    padding:9px 15px;font-size:13.5px;cursor:pointer;display:inline-block;font-weight:600;
+  }
+  .next-alarm b{font-weight:800;}
+
+  /* ---------- tab bar ---------- */
+  .tabbar{
+    position:sticky;top:0;z-index:40;margin-top:10px;padding:9px 0 8px;
+    background:rgba(248,246,242,.94);backdrop-filter:blur(8px);
+    display:flex;gap:5px;overflow-x:auto;border-bottom:1px solid var(--line);
+  }
+  .tabbar::-webkit-scrollbar{display:none;}
+  .tabbar button{
+    flex-shrink:0;border:1px solid transparent;background:none;cursor:pointer;
+    padding:6px 14px;border-radius:99px;font-size:13.5px;font-weight:700;color:var(--sub);
+    font-family:inherit;
+  }
+  .tabbar button.on{background:#fff;color:var(--orange-deep);border-color:var(--line);box-shadow:0 1px 5px rgba(90,60,30,.08);}
+  .tabbar button .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-left:5px;vertical-align:1px;}
+  .panel{display:none;padding:20px 0 56px;}
+  .panel.on{display:block;animation:fade .22s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  /* ---------- generic ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 17px;}
+  .card h4{font-size:14.5px;margin-bottom:6px;}
+  .card p{font-size:13.5px;color:var(--sub);}
+  .card p b{color:var(--ink);}
+  .pill{display:inline-block;font-size:11.5px;font-weight:800;border-radius:99px;padding:1px 9px;letter-spacing:.3px;}
+  .pill.now{background:var(--red-soft);color:var(--red);}
+  .pill.rob{background:var(--orange-soft);color:var(--orange-deep);}
+  .pill.book{background:var(--teal-soft);color:var(--teal);}
+  .pill.opt{background:#f0edf8;color:#7a63b5;}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  a.plain{color:var(--teal);text-decoration:none;border-bottom:1px dotted;}
+  button.copy{
+    border:0;background:var(--teal);color:#fff;border-radius:8px;padding:4px 12px;
+    font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;
+  }
+  button.copy:hover{background:#0d6f64;}
+  button.copy.ok{background:var(--gold);}
+  .copy-chip{
+    display:inline-flex;max-width:100%;overflow:hidden;background:#f4efe7;
+    border:1px dashed #d8c9b8;border-radius:9px;padding:3px 9px;font-size:12px;
+    font-family:Consolas,Menlo,monospace;color:var(--ink);
+  }
+  .copy-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .copy-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:9px;}
+
+  /* ---------- overview ---------- */
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  th,td{padding:9px 13px;text-align:left;font-size:13.5px;border-bottom:1px solid var(--line);}
+  th{background:#faf6ef;font-size:12.5px;color:var(--sub);}
+  tr:last-child td{border-bottom:0;}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .total-row td{background:var(--orange-soft);font-weight:800;}
+  input.cost{
+    width:80px;border:1px dashed #d8c9b8;border-radius:7px;background:#fffdf9;
+    padding:3px 7px;font-size:13.5px;text-align:right;color:var(--ink);font-weight:700;font-family:inherit;
+  }
+  input.cost:focus{outline:2px solid var(--orange);border-style:solid;}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px;}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 13px;text-align:center;}
+  .stat .v{font-size:17px;font-weight:800;color:var(--orange-deep);}
+  .stat .k{font-size:12px;color:var(--sub);margin-top:1px;}
+  .todo{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px;}
+  .todo:last-child{border-bottom:0;}
+  .todo .n{
+    flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;
+    font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px;
+  }
+
+  /* ---------- alarms ---------- */
+  .alarm .when{font-size:15.5px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .alarm .cd{font-size:11.5px;font-weight:800;color:var(--gold);background:var(--gold-soft);border-radius:99px;padding:2px 9px;white-space:nowrap;}
+  .alarm .cd.done{color:var(--red);background:var(--red-soft);}
+  .alarm .what{margin-top:4px;font-weight:700;font-size:14.5px;}
+  .alarm .how{margin-top:4px;font-size:13px;color:var(--sub);}
+  .alarm .how b{color:var(--ink);}
+
+  /* ---------- trip ---------- */
+  .daynav{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;}
+  .daynav::-webkit-scrollbar{display:none;}
+  .daynav button{
+    flex-shrink:0;border:1px solid var(--line);background:#fff;cursor:pointer;font-family:inherit;
+    border-radius:10px;padding:6px 13px;font-size:13px;font-weight:700;color:var(--sub);
+  }
+  .daynav button.on{background:var(--orange);border-color:var(--orange);color:#fff;}
+  .day-panel{display:none;}
+  .day-panel.on{display:block;animation:fade .22s ease;}
+  .day-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+  .day-head h3{font-size:17px;}
+  .day-head .stay{font-size:12px;font-weight:700;color:var(--teal);background:var(--teal-soft);border-radius:99px;padding:3px 11px;}
+  ul.tl{list-style:none;position:relative;padding-left:19px;}
+  ul.tl::before{content:"";position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--line);border-radius:2px;}
+  ul.tl li{position:relative;padding:6px 0 6px 12px;}
+  ul.tl li::before{
+    content:"";position:absolute;left:-19px;top:14px;width:9px;height:9px;border-radius:50%;
+    background:#fff;border:2.5px solid var(--orange);
+  }
+  ul.tl li.mile::before{border-color:var(--teal);background:var(--teal-soft);}
+  ul.tl li.warn::before{border-color:var(--red);background:var(--red-soft);}
+  .t-time{font-weight:800;color:var(--orange-deep);font-size:13.5px;margin-right:7px;}
+  .t-title{font-weight:700;}
+  .t-detail{color:var(--sub);font-size:13px;margin-top:2px;}
+  .t-detail b{color:var(--ink);}
+  .mini-card{background:#fbf8f3;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-top:12px;font-size:13px;}
+  .mini-card .mc-title{font-weight:800;font-size:13px;margin-bottom:3px;}
+  .mini-card a{color:var(--teal);font-weight:600;text-decoration:none;border-bottom:1px dotted;}
+
+  footer{padding:0 16px 44px;color:var(--sub);font-size:12px;max-width:920px;margin:0 auto;}
+  @media (max-width:640px){
+    header.top h1{font-size:20px;}
+    table{display:block;overflow-x:auto;}
+  }
+  @media print{
+    .tabbar,.next-alarm{display:none;}
+    .panel{display:block !important;page-break-before:always;}
+    .panel:first-of-type{page-break-before:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>长沙<span class="hl">·</span>武功山 <span style="font-size:15px;color:var(--sub);font-weight:600;">4人5日导览</span></h1>
+    <div class="meta">2男2女 · 10.3(六)晚 — 10.7(三)午 · 信息核验 2026-09-26</div>
+    <div class="next-alarm" id="nextAlarm" title="点击查看抢票清单">⏰ 计算中…</div>
+  </div>
+</header>
+
+<div class="wrap" style="padding:0;">
+<nav class="tabbar wrap" id="tabbar">
+  <button data-tab="overview" class="on">总览</button>
+  <button data-tab="alarms">⏰ 抢票闹钟</button>
+  <button data-tab="trip">🗓 每日行程</button>
+  <button data-tab="wugong">⛰ 夜爬专区</button>
+  <button data-tab="budget">💰 预算</button>
+  <button data-tab="food">🍜 美食</button>
+  <button data-tab="tips">✅ 贴士</button>
+</nav>
+</div>
+
+<main class="wrap">
+
+<!-- ================= 总览 ================= -->
+<section class="panel on" id="panel-overview">
+  <div class="card" style="margin-bottom:12px;">
+    <h4>🗺 行程一览</h4>
+    <table style="margin-top:6px;">
+      <tr><th>日期</th><th>安排</th><th>住宿</th></tr>
+      <tr><td><b>10/3 六</b></td><td>晚上到长沙 → 入住</td><td>乎然民宿(河西)</td></tr>
+      <tr><td><b>10/4 日</b></td><td>白天橘子洲 · 晚上大学城+后湖</td><td>乎然民宿</td></tr>
+      <tr><td><b>10/5 一</b></td><td>省博 → 高铁 → <b>夜爬武功山</b></td><td>归屿民宿(山下)</td></tr>
+      <tr><td><b>10/6 二</b></td><td>金顶日出 → 索道下山 → 回长沙</td><td>足浴店(待订)</td></tr>
+      <tr><td><b>10/7 三</b></td><td>收拾 → 下午高铁返程</td><td>—</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <h4>🔥 现在就该做的三件事</h4>
+    <div class="todo"><span class="n">1</span><span><b>买高铁票</b>(12306已开售):10/5 长沙南→萍乡北(16:30–17:30发车) + 10/6 萍乡北→长沙南(15:00–17:00到),二等座 54.5 元/人/程</span></div>
+    <div class="todo"><span class="n">2</span><span><b>抢省博 10/5 门票</b>:9/28 起<b>每晚 20:00</b> 进小程序试约+挂候补,9/30 是主抢场</span></div>
+    <div class="todo"><span class="n">3</span><span><b>订 10/6 足浴过夜店</b>:美团/点评搜「24小时·可过夜」,电话确认后再下单</span></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="v">¥54.5</div><div class="k">高铁/人/程 · 30分钟</div></div>
+    <div class="stat"><div class="v">20:00</div><div class="k">省博每晚放票</div></div>
+    <div class="stat"><div class="v">¥70</div><div class="k">武功山门票/人</div></div>
+    <div class="stat"><div class="v">≈6:15</div><div class="k">10/6 金顶日出</div></div>
+    <div class="stat"><div class="v">5–10℃</div><div class="k">山顶夜间温度</div></div>
+    <div class="stat"><div class="v">¥0</div><div class="k">省博/橘子洲门票</div></div>
+  </div>
+  <p class="hint">详细规则和入口都在上方标签页里;抢票时间线看「⏰ 抢票闹钟」。</p>
+</section>
+
+<!-- ================= 抢票闹钟 ================= -->
+<section class="panel" id="panel-alarms">
+  <div class="grid">
+
+    <div class="card alarm">
+      <div class="when"><span class="pill now">立即 · 已开售</span></div>
+      <div class="what">🚄 10/5 高铁 长沙南 → 萍乡北</div>
+      <div class="how">选 <b>16:30–17:30 发车</b> 的 G 字头(约30分钟,54.5元),4 人一起买,下馆后从容赶到。</div>
+    </div>
+
+    <div class="card alarm">
+      <div class="when"><span class="pill now">立即 · 已开售</span></div>
+      <div class="what">🚄 10/6 高铁 萍乡北 → 长沙南</div>
+      <div class="how">选 <b>15:00–17:00 到达</b> 的车次,下山后有时间回民宿洗漱。国庆返程紧,买好再玩。</div>
+    </div>
+
+    <div class="card alarm">
+      <div class="when">9/28(一) 20:00 <span class="cd" data-deadline="2026-09-28T20:00:00+08:00">…</span></div>
+      <div class="what"><span class="pill rob">试探点</span> 🏛 省博 10/5 门票 · 第一次尝试</div>
+      <div class="how">提前天数有「<b>5天</b>」「<b>7天</b>」两种口径,按 7 天算就是今晚。约不到挂<b>候补</b>。</div>
+    </div>
+
+    <div class="card alarm">
+      <div class="when">9/30(三) 20:00 <span class="cd" data-deadline="2026-09-30T20:00:00+08:00">…</span></div>
+      <div class="what"><span class="pill rob">主抢场</span> 🏛 省博 10/5 门票</div>
+      <div class="how">多数攻略口径「<b>提前5天、每晚20:00放票</b>」——必抢。9/28 起每晚都试,白天刷退票。</div>
+      <div class="copy-row">
+        <button class="copy" data-copy="#小程序://湖南省博物馆/3O0fIEOxKj3rhSm">复制小程序口令</button>
+        <span class="copy-chip"><span>#小程序://湖南省博物馆/3O0fIEOxKj3rhSm</span></span>
+      </div>
+    </div>
+
+    <div class="card alarm">
+      <div class="when">10/1(四) 早7:00起 <span class="cd" data-deadline="2026-10-01T07:00:00+08:00">…</span></div>
+      <div class="what"><span class="pill rob">预约开放日</span> 🏝 橘子洲 10/4 预约(提前3天)</div>
+      <div class="how">不是固定时刻放票:<b>7:00–22:00 随机放票 + 退票回池</b>(本地宝 9/23 更新)。10/1 起<b>早中晚多刷</b>,10/2–10/3 捡漏。4 人全部实名。</div>
+      <div class="copy-row">
+        <button class="copy" data-copy="#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k">复制小程序口令</button>
+        <span class="copy-chip"><span>#小程序://岳麓山橘子洲官方预约平台/3N9Prmi6oyrX46k</span></span>
+      </div>
+    </div>
+
+    <div class="card alarm">
+      <div class="when">建议 10/1 前</div>
+      <div class="what"><span class="pill book">待办</span> 🦶 10/6 足浴过夜店(未定)</div>
+      <div class="how">美团/点评搜「<b>24小时·可过夜</b>」:金色印象、碧海云天(约139元/位含三餐+过夜)、汤乐泉。<b>电话确认过夜政策</b>再下单,选地铁2号线沿线方便去长沙南。</div>
+    </div>
+
+    <div class="card alarm">
+      <div class="when">10/1(同橘子洲)</div>
+      <div class="what"><span class="pill opt">可选</span> ⛰ 岳麓山 10/4 傍晚场</div>
+      <div class="how">与橘子洲同平台预约(提前3天)。当晚是大学城+后湖,<b>体力想留给武功山可以不约</b>。</div>
+    </div>
+
+  </div>
+  <p class="hint">💡 口令用法:点「复制」→ 微信发给<b>文件传输助手</b> → 点开直达小程序。省博也可走公众号「湖南省博物馆」或官网 yuyues.hnmuseum.com。</p>
+</section>
+
+<!-- ================= 每日行程 ================= -->
+<section class="panel" id="panel-trip">
+  <div class="daynav" id="daynav">
+    <button data-day="d1" class="on">D1 · 10/3</button>
+    <button data-day="d2">D2 · 10/4</button>
+    <button data-day="d3">D3 · 10/5</button>
+    <button data-day="d4">D4 · 10/6</button>
+    <button data-day="d5">D5 · 10/7</button>
+  </div>
+
+  <div class="day-panel on" id="dpanel-d1">
+    <div class="card">
+      <div class="day-head"><h3>10/3(六) 落地 → 入住河西</h3><span class="stay">🏨 乎然民宿 · 第1晚</span></div>
+      <ul class="tl">
+        <li><span class="t-time">晚上</span><span class="t-title">抵达长沙</span>
+          <div class="t-detail"><b>高铁到长沙南</b>:地铁2号线→迎宾路口换6号线→六沟垅(约50分钟),打车约35分钟。<b>飞机到黄花机场</b>:磁浮→长沙南再照走,打车约50–60分钟。</div>
+        </li>
+        <li><span class="t-time">入住</span><span class="t-title">乎然民宿河西店(保利天禧E4栋31层3131)</span>
+          <div class="t-detail">31层江景,先打电话联系房东取钥匙,报 4 人。距地铁6号线六沟垅站约700米。</div>
+        </li>
+        <li class="mile"><span class="t-time">夜宵</span><span class="t-title">渔人码头 / 银盆岭周边</span>
+          <div class="t-detail">江边夜宵街:小龙虾、烧烤配湘江夜景,吃饱早睡。</div>
+        </li>
+      </ul>
+      <div class="mini-card">
+        <div class="mc-title">🏨 乎然民宿河西店(10/3–10/4 两晚 · 已订)</div>
+        岳麓区银盆岭街道保利天禧E4栋31层 3131 · ☎ <a href="tel:19186963252">19186963252</a> ·
+        <a href="http://dpurl.cn/4y7BqK4z" target="_blank">美团订单</a>
+        <button class="copy" data-copy="长沙岳麓区银盆岭街道保利天禧E4栋31层3131 乎然民宿河西店 电话19186963252">复制地址</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-panel" id="dpanel-d2">
+    <div class="card">
+      <div class="day-head"><h3>10/4(日) 橘子洲 + 大学城 + 后湖</h3><span class="stay">🏨 乎然民宿 · 第2晚</span></div>
+      <ul class="tl">
+        <li><span class="t-time">08:00</span><span class="t-title">早餐</span><div class="t-detail">嗦一碗长沙米粉出发。</div></li>
+        <li><span class="t-time">09:00</span><span class="t-title">橘子洲</span>
+          <div class="t-detail">地铁2号线<b>橘子洲站</b>直达,凭身份证/预约码入园。<b>观光小火车 40 元往返</b>建议买。打卡青年毛泽东雕像、洲头。</div>
+        </li>
+        <li><span class="t-time">12:30</span><span class="t-title">午饭</span><div class="t-detail">溁湾镇/河西湘菜,或留肚子给晚上。</div></li>
+        <li><span class="t-time">14:00</span><span class="t-title">回酒店午休 / 可选岳麓山</span>
+          <div class="t-detail">国庆晒+人多,眯一觉存体力。<b>岳麓山需另约(同平台提前3天)</b>;后天要夜爬,量力。</div>
+        </li>
+        <li class="mile"><span class="t-time">16:30</span><span class="t-title">岳麓大学城</span>
+          <div class="t-detail">湖南大学、中南大学逛校园,<b>登高路小吃街</b>一路吃。</div>
+        </li>
+        <li class="mile"><span class="t-time">19:00</span><span class="t-title">后湖艺术区夜景</span>
+          <div class="t-detail">湖边灯光+艺术空间+咖啡,长沙最舒服的夜散步路线。</div>
+        </li>
+        <li><span class="t-time">21:30</span><span class="t-title">回酒店,收拾夜爬背包</span><div class="t-detail">打车约15分钟;对照「夜爬专区」清装备,早睡。</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="day-panel" id="dpanel-d3">
+    <div class="card">
+      <div class="day-head"><h3>10/5(一) 省博 → 萍乡 → 夜爬武功山</h3><span class="stay">🏨 归屿民宿(山下)</span></div>
+      <ul class="tl">
+        <li><span class="t-time">08:30</span><span class="t-title">退房,行李随身</span>
+          <div class="t-detail">行李<b>寄存省博寄存处</b>(以馆内公告为准),出馆取行李直奔高铁站。</div>
+        </li>
+        <li class="mile"><span class="t-time">09:30</span><span class="t-title">湖南博物院(需提前抢票)</span>
+          <div class="t-detail">地铁6号线<b>「烈士公园南(湖南省博物馆)」1A口</b>步行500米。<b>国庆 10/1–7 正常开放且延长开放,10/5 不闭馆</b>。必看:马王堆汉墓陈列(辛追夫人、素纱襌衣、T形帛画)、《湖南人》陈列,逛 2.5–3 小时。</div>
+        </li>
+        <li><span class="t-time">13:00</span><span class="t-title">去长沙南站</span>
+          <div class="t-detail">打车约35分钟(¥35–45),或 6号线→迎宾路口换2号线(约50分钟)。<b>站内吃晚饭/买干粮</b>——山上物价贵。</div>
+        </li>
+        <li class="mile"><span class="t-time">16:30–17:30</span><span class="t-title">高铁 长沙南 → 萍乡北(54.5元)</span><div class="t-detail">约30分钟,按已购车次走。</div></li>
+        <li><span class="t-time">18:00</span><span class="t-title">萍乡北 → 武功山游客中心</span>
+          <div class="t-detail">景区大巴约1小时;夜间可站前<b>拼车/打车40–60分钟</b>(4人一辆正好)。</div>
+        </li>
+        <li><span class="t-time">19:30</span><span class="t-title">入住归屿民宿 · 修整</span>
+          <div class="t-detail">换登山鞋,检查<b>头灯/充电宝/厚外套</b>,吃点东西;<b>大件行李寄存民宿</b>。</div>
+        </li>
+        <li class="warn"><span class="t-time">21:30</span><span class="t-title">石鼓寺登山口</span>
+          <div class="t-detail">夜爬时段有景交接驳(约19:30–24:00),或民宿送。<b>门票 70 元/人提前买好</b>,身份证随身。</div>
+        </li>
+        <li class="warn"><span class="t-time">22:00</span><span class="t-title">开爬!头灯必戴</span>
+          <div class="t-detail">5–6小时登顶,凌晨3:30–4:30到金顶。细节见「夜爬专区」。</div>
+        </li>
+      </ul>
+      <div class="mini-card">
+        <div class="mc-title">🏨 归屿民宿(10/5 晚 · 已订 · 放行李+下山休整)</div>
+        芦溪县芦万武旅游公路蔡家村杨家8组 · ☎ <a href="tel:15798067638">15798067638</a> ·
+        <a href="http://dpurl.cn/mxyv0eYz" target="_blank">美团订单</a>
+        <button class="copy" data-copy="萍乡市芦溪县芦万武旅游公路蔡家村杨家8组 归屿民宿(武功山景区店) 电话15798067638">复制地址</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-panel" id="dpanel-d4">
+    <div class="card">
+      <div class="day-head"><h3>10/6(二) 日出 → 下山 → 回长沙 → 足浴</h3><span class="stay">🦶 足浴店过夜(待订)</span></div>
+      <ul class="tl">
+        <li class="warn"><span class="t-time">03:30–04:30</span><span class="t-title">金顶占位</span>
+          <div class="t-detail">夜里 <b>5–10℃+大风</b>,租军大衣(约¥30–50)或穿厚外套,找背风处。</div>
+        </li>
+        <li class="mile"><span class="t-time">06:10–06:25</span><span class="t-title">🌅 金顶日出 · 高山草甸</span>
+          <div class="t-detail">10月初日出约 6:15(以当日预报为准),草甸开始转金,最出片的季节。</div>
+        </li>
+        <li><span class="t-time">07:30</span><span class="t-title">索道下山(二级35 + 一级50)</span>
+          <div class="t-detail">夜爬后双腿基本废,<b>强烈建议全程索道</b>;开站时间以当日公告为准。</div>
+        </li>
+        <li><span class="t-time">10:30</span><span class="t-title">回归屿民宿洗漱退房</span><div class="t-detail">热水澡缓一缓,取行李,吃口热饭。</div></li>
+        <li class="mile"><span class="t-time">13:00–15:00</span><span class="t-title">高铁 萍乡北 → 长沙南(54.5元)</span><div class="t-detail">到站直接地铁/打车去足浴店。</div></li>
+        <li class="mile"><span class="t-time">17:00</span><span class="t-title">足浴店:洗浴+按摩+过夜</span>
+          <div class="t-detail">足浴 100–200 元/人,加约 30 元大厅过夜;或选含三餐+过夜套票(约139元/位)。<b>睡前把所有设备充满电</b>。</div>
+        </li>
+      </ul>
+      <div class="mini-card">
+        <div class="mc-title">🦶 足浴店怎么挑(未订)</div>
+        ① <b>金色印象</b>:网红「足浴+炫饭」过夜模式;② <b>碧海云天</b>:约139元/位含洗浴+三餐+24h过夜;③ <b>汤乐泉</b>:大型日韩式汤泉,体验最好但离南站稍远(地铁可达)。<br>
+        ✅ 下单前电话确认:<b>是否真可过夜、躺椅还是独立间、几点退</b>。优先地铁2号线沿线。
+      </div>
+    </div>
+  </div>
+
+  <div class="day-panel" id="dpanel-d5">
+    <div class="card">
+      <div class="day-head"><h3>10/7(三) 收拾 → 高铁返程</h3><span class="stay">🚄 长沙南出发</span></div>
+      <ul class="tl">
+        <li><span class="t-time">上午</span><span class="t-title">收拾退房</span>
+          <div class="t-detail">足浴店一般<b>中午12点前退</b>,行李寄存前台;顺便备份这几天照片。</div>
+        </li>
+        <li class="mile"><span class="t-time">11:30</span><span class="t-title">最后一顿湘菜</span>
+          <div class="t-detail">辣椒炒肉/小炒黄牛肉,或在长沙南站里解决。</div>
+        </li>
+        <li><span class="t-time">13:30</span><span class="t-title">去长沙南站</span>
+          <div class="t-detail">地铁2号线约30–40分钟,<b>提前1小时到站</b>,下午高铁回家 🚄。</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 夜爬专区 ================= -->
+<section class="panel" id="panel-wugong">
+  <div class="grid">
+    <div class="card">
+      <h4>🌙 夜爬节奏(正常体力)</h4>
+      <p><b>22:00</b> 石鼓寺出发 → <b>23:30</b> 好汉坡(开始陡)→ <b>01:00</b> 中庵索道上站 → <b>02:30</b> 金顶索道上站 → <b>03:30–04:30</b> 金顶占位 → <b>06:15</b> 日出。<br>慢而不断,每小时歇10分钟,<b>4人全程结伴</b>。</p>
+    </div>
+    <div class="card">
+      <h4>🎫 门票 & 索道</h4>
+      <p>门票 <b>70 元/人</b>(学生约50)· 金顶索道 上/下行各35 · 中庵索道 上65/下50 · 军大衣租赁约30–50。夜爬只用到<b>下行</b>;运营时间以景区当日公告为准。</p>
+    </div>
+    <div class="card">
+      <h4>🎒 背包清单(一人一份)</h4>
+      <p>必带:<b>头灯/手电</b>、防滑登山鞋、<b>厚外套或薄羽绒</b>、雨衣、充电宝、水1L+电解质、高热量零食、身份证。<br>建议:登山杖(山下2元竹棍)、手套、保温杯(山顶免费热水)、少量现金、防晒。</p>
+    </div>
+    <div class="card">
+      <h4>⚠️ 夜爬红线</h4>
+      <p>山顶夜间 <b>5–10℃ 且风大</b>,到顶立刻加衣防失温,湿了速换;手机低温掉电快,<b>贴身放</b>;只走主步道,有人不舒服就近求助,<b>量力放弃不丢人</b>;雨大风大果断改白天索道上山。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 预算 ================= -->
+<section class="panel" id="panel-budget">
+  <table>
+    <tr><th>类别</th><th>项目</th><th class="num">4人合计(元)</th><th>备注</th></tr>
+    <tr><td rowspan="3">住宿</td><td>长沙民宿 ×2晚 <span class="pill book">已订</span></td><td class="num"><input class="cost" data-key="h1" type="number" value="800"></td><td>按美团实付改</td></tr>
+    <tr><td>武功山民宿 ×1晚 <span class="pill book">已订</span></td><td class="num"><input class="cost" data-key="h2" type="number" value="400"></td><td>按美团实付改</td></tr>
+    <tr><td>足浴过夜 ×1晚 <span class="pill rob">未订</span></td><td class="num"><input class="cost" data-key="h3" type="number" value="600"></td><td>约150/人含项目</td></tr>
+    <tr><td rowspan="4">交通</td><td>往返长沙大交通(待填)</td><td class="num"><input class="cost" data-key="t0" type="number" value="0"></td><td>自己补上</td></tr>
+    <tr><td>长沙南 ⇄ 萍乡北 高铁×2程</td><td class="num"><input class="cost" data-key="t1" type="number" value="440"></td><td>54.5×4×2</td></tr>
+    <tr><td>萍乡北 ⇄ 武功山景区往返</td><td class="num"><input class="cost" data-key="t2" type="number" value="300"></td><td>大巴/拼车估</td></tr>
+    <tr><td>长沙市内地铁+打车</td><td class="num"><input class="cost" data-key="t3" type="number" value="300"></td><td>估</td></tr>
+    <tr><td rowspan="4">门票</td><td>省博 / 橘子洲 / 岳麓山</td><td class="num"><input class="cost" data-key="k0" type="number" value="0"></td><td>全免费</td></tr>
+    <tr><td>武功山门票</td><td class="num"><input class="cost" data-key="k1" type="number" value="280"></td><td>70×4</td></tr>
+    <tr><td>武功山索道下行 <span class="pill opt">可选</span></td><td class="num"><input class="cost" data-key="k2" type="number" value="340"></td><td>85×4</td></tr>
+    <tr><td>橘子洲观光小火车 <span class="pill opt">可选</span></td><td class="num"><input class="cost" data-key="k3" type="number" value="160"></td><td>40×4</td></tr>
+    <tr><td rowspan="2">吃喝</td><td>长沙 3 天餐饮</td><td class="num"><input class="cost" data-key="f1" type="number" value="1600"></td><td>约400/天/4人</td></tr>
+    <tr><td>武功山段 + 干粮</td><td class="num"><input class="cost" data-key="f2" type="number" value="400"></td><td>山上物价高</td></tr>
+    <tr><td>其他</td><td>装备/零食/杂项</td><td class="num"><input class="cost" data-key="o1" type="number" value="200"></td><td>头灯、雨衣等</td></tr>
+    <tr class="total-row"><td colspan="2">合计</td><td class="num" id="totalAll">—</td><td id="perPerson">—</td></tr>
+  </table>
+  <p class="hint">数字可直接改,改动自动存在本机浏览器。</p>
+</section>
+
+<!-- ================= 美食 ================= -->
+<section class="panel" id="panel-food">
+  <div class="grid">
+    <div class="card">
+      <h4>🏨 酒店周边(银盆岭·河西)</h4>
+      <p><b>渔人码头</b>:江边夜宵街,小龙虾、烧烤配夜景<br><b>长沙米粉</b>:每天早上来一碗</p>
+    </div>
+    <div class="card">
+      <h4>🏝 河东经典(顺路可加)</h4>
+      <p><b>茶颜悦色</b>:幽兰拿铁、声声乌龙<br><b>黑色经典臭豆腐</b>:配糖油粑粑<br><b>费大厨/炊烟</b>:辣椒炒肉、小炒黄牛肉,先取号<br><b>火宫殿(坡子街)</b>:老字号小吃合集<br><b>文和友(海信广场)</b>:复古场景,排队狠酌情</p>
+    </div>
+    <div class="card">
+      <h4>🎓 大学城 / 后湖(D2晚)</h4>
+      <p><b>登高路小吃街</b>:岳麓山下臭豆腐、糖油粑粑、凉面<br><b>麓山南路</b>:学生街平价小吃<br><b>后湖艺术区咖啡</b>:夜景收尾最舒服</p>
+    </div>
+    <div class="card">
+      <h4>⛰ 萍乡 / 武功山(D3–D4)</h4>
+      <p><b>上山前</b>:山下吃顿好的,萍乡小炒肉、莲花血鸭<br><b>爬山补给</b>:士力架、坚果、电解质水<br><b>下山后</b>:民宿附近农家菜热乎饭</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 贴士 ================= -->
+<section class="panel" id="panel-tips">
+  <div class="grid">
+    <div class="card">
+      <h4>🪪 身份证 = 全程通行证</h4>
+      <p>省博、橘子洲、高铁、武功山、足浴全实名,<b>4 人身份证原件随身</b>,预约信息提前录进小程序。</p>
+    </div>
+    <div class="card">
+      <h4>🌤 天气</h4>
+      <p>出发前 3 天查长沙+萍乡+武功山三地;国庆偶有降雨,<b>雨衣比伞好用</b>(夜爬必备);日出约 6:15 以当日预报为准。</p>
+    </div>
+    <div class="card">
+      <h4>🔋 电量管理</h4>
+      <p>每人一个充电宝起步,夜爬那晚手机省着用(低温掉电快);足浴店睡前全部充满。</p>
+    </div>
+    <div class="card">
+      <h4>🏥 紧急联系</h4>
+      <p>报警 110 · 急救 120 · 高铁客服 12306;两间民宿电话在 D1/D3 页,存进通讯录。</p>
+    </div>
+    <div class="card">
+      <h4>🎫 抢票心法</h4>
+      <p>省博:每晚 20:00 守 + 白天捡退票 + 挂候补;橘子洲:开放日起全天多刷;高铁:现在就买。</p>
+    </div>
+    <div class="card">
+      <h4>👟 体力分配</h4>
+      <p>D3 白天别暴走,晚饭吃饱;夜爬 4 人结伴、慢而不断;D4 索道下山别逞强。</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  私人定制行程导览 · 预约规则/价格/班次核验于 2026-09-26,出行前以官方小程序与景区公告为准。<br>
+  来源:长沙本地宝 · 湖南博物院官方通告 · 长沙晚报 · 武功山景区公开信息 · 12306
+</footer>
+
+<script>
+/* ---- tabs ---- */
+var tabbar = document.getElementById('tabbar');
+function showTab(name){
+  tabbar.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.dataset.tab === name); });
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.toggle('on', p.id === 'panel-' + name); });
+  try{ localStorage.setItem('cs_trip_tab', name); }catch(e){}
+}
+tabbar.addEventListener('click', function(e){
+  var b = e.target.closest('button'); if (b) showTab(b.dataset.tab);
+});
+var savedTab = null; try{ savedTab = localStorage.getItem('cs_trip_tab'); }catch(e){}
+if (savedTab && document.getElementById('panel-' + savedTab)) showTab(savedTab);
+document.getElementById('nextAlarm').addEventListener('click', function(){ showTab('alarms'); window.scrollTo({top:0,behavior:'smooth'}); });
+
+/* ---- day sub-tabs ---- */
+var daynav = document.getElementById('daynav');
+daynav.addEventListener('click', function(e){
+  var b = e.target.closest('button'); if (!b) return;
+  daynav.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x === b); });
+  document.querySelectorAll('.day-panel').forEach(function(p){ p.classList.toggle('on', p.id === 'dpanel-' + b.dataset.day); });
+});
+
+/* ---- copy buttons ---- */
+document.querySelectorAll('button.copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var text = btn.getAttribute('data-copy');
+    function done(){
+      var old = btn.textContent;
+      btn.textContent = '✓ 已复制'; btn.classList.add('ok');
+      setTimeout(function(){ btn.textContent = old; btn.classList.remove('ok'); }, 1600);
+    }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); done(); }catch(e){}
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else { fallback(); }
+  });
+});
+
+/* ---- countdowns ---- */
+function fmt(ms){
+  if (ms <= 0) return '该行动啦！';
+  var d = Math.floor(ms/86400000), h = Math.floor(ms%86400000/3600000), m = Math.floor(ms%3600000/60000);
+  if (d > 0) return d + '天' + h + '小时后';
+  if (h > 0) return h + '小时' + m + '分后';
+  return '只剩' + m + '分钟！';
+}
+function tick(){
+  var now = Date.now(), nearest = null;
+  document.querySelectorAll('[data-deadline]').forEach(function(el){
+    var t = new Date(el.getAttribute('data-deadline')).getTime(), diff = t - now;
+    el.textContent = fmt(diff);
+    el.classList.toggle('done', diff <= 0);
+    if (diff > 0 && (nearest === null || t < nearest.t)) nearest = {t:t, el:el};
+  });
+  var bar = document.getElementById('nextAlarm');
+  if (nearest){
+    var d = new Date(nearest.t);
+    var label = nearest.el.closest('.card').querySelector('.what').textContent.trim();
+    var when = (d.getMonth()+1) + '月' + d.getDate() + '日 ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    bar.innerHTML = '⏰ 最近节点:<b>' + when + ' ' + label.replace(/^.*?]\s*/, '') + '</b>(还有 ' + Math.floor((nearest.t-now)/3600000) + ' 小时)· 点击查看';
+  } else {
+    bar.textContent = '⏰ 所有开抢节点已过——玩得开心!';
+  }
+}
+tick(); setInterval(tick, 30000);
+
+/* ---- budget ---- */
+function calc(){
+  var total = 0;
+  document.querySelectorAll('input.cost').forEach(function(inp){
+    var v = parseFloat(inp.value); if (isNaN(v)) v = 0;
+    total += v;
+    try{ localStorage.setItem('cs_trip_' + inp.dataset.key, inp.value); }catch(e){}
+  });
+  var t = document.getElementById('totalAll'), p = document.getElementById('perPerson');
+  if (t) t.textContent = '¥ ' + total.toLocaleString();
+  if (p) p.textContent = '人均 ¥ ' + Math.round(total/4).toLocaleString();
+}
+document.querySelectorAll('input.cost').forEach(function(inp){
+  try{
+    var saved = localStorage.getItem('cs_trip_' + inp.dataset.key);
+    if (saved !== null && saved !== '') inp.value = saved;
+  }catch(e){}
+  inp.addEventListener('input', calc);
+});
+calc();
+</script>
+</body>
+</html>
