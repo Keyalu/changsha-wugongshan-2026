@@ -6,13 +6,13 @@
 <title>长沙·武功山 · 4人5日导览</title>
 <style>
   :root{
-    --bg:#f5f6f8; --card:#ffffff; --ink:#1c2530; --sub:#697380;
-    --orange:#e8590c; --orange-deep:#c2410c; --orange-soft:#fff0e6;
-    --teal:#0e7c70; --teal-soft:#e0f2ef;
+    --bg:#f2f7f3; --card:#ffffff; --ink:#1b2b23; --sub:#66786d;
+    --orange:#16a34a; --orange-deep:#157a45; --orange-soft:#e4f5ec;
+    --teal:#0e7c70; --teal-soft:#dff0ee;
     --red:#d92d20; --red-soft:#fee4e2;
     --gold:#b54708; --gold-soft:#fdf0e0;
     --purple:#6941c6; --purple-soft:#efeafc;
-    --line:#e4e7ec;
+    --line:#dfe8e2;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -502,11 +502,11 @@
     <span class="hint" style="margin:0;" id="mapHint">市内路线由高德实时规划,高铁/索道为示意线;点标点看说明。D5足浴店未定,定好后自动补线。</span>
   </div>
   <div class="lg">
-    <span><b style="border-color:#0e7c70;"></b>驾车/打车</span>
+    <span><b style="border-color:#16a34a;"></b>驾车/打车</span>
     <span><b style="border-color:#2563eb;border-top-style:dashed;"></b>地铁/公交</span>
     <span><b style="border-color:#6941c6;border-top-style:dashed;"></b>高铁(示意)</span>
     <span><b style="border-color:#d92d20;"></b>夜爬徒步线</span>
-    <span><b style="border-color:#e8590c;border-top-style:dotted;"></b>索道(示意)</span>
+    <span><b style="border-color:#0d9488;border-top-style:dotted;"></b>索道(示意)</span>
     <span><b style="border-color:#697380;"></b>步行</span>
   </div>
 </section>
@@ -830,7 +830,7 @@ function addLine(pts,st){
   mapObj.add(l);overlays.push(l);
 }
 function straight(rt){
-  const S={transit:{color:'#2563eb',weight:4,dashArray:[10,5]},drive:{color:'#0e7c70',weight:4},rail:{color:'#6941c6',weight:4.5,dashArray:[14,8]},walk:{color:'#697380',weight:3,opacity:.8},cable:{color:'#e8590c',weight:3.5,dashArray:[2,7]}}[rt.mode];
+  const S={transit:{color:'#2563eb',weight:4,dashArray:[10,5]},drive:{color:'#16a34a',weight:4},rail:{color:'#6941c6',weight:4.5,dashArray:[14,8]},walk:{color:'#697380',weight:3,opacity:.8},cable:{color:'#0d9488',weight:3.5,dashArray:[2,7]}}[rt.mode];
   addLine([POI[rt.from],POI[rt.to]],S);
 }
 function hav(a,b){const R=6371000,r=Math.PI/180,dLa=(b[1]-a[1])*r,dLo=(b[0]-a[0])*r,s=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a[1]*r)*Math.cos(b[1]*r)*Math.sin(dLo/2)*Math.sin(dLo/2);return 2*R*Math.asin(Math.sqrt(s));}
@@ -877,7 +877,7 @@ function planRoute(rt){
             else if(r.steps){r.steps.forEach(function(st){(st.path||[]).forEach(function(ll){pts.push(ll);});});}
           }
           if(pts.length>1){
-            addLine(pts,rt.mode==='transit'?{color:'#2563eb',weight:4,dashArray:[10,5]}:{color:'#0e7c70',weight:4});
+            addLine(pts,rt.mode==='transit'?{color:'#2563eb',weight:4,dashArray:[10,5]}:{color:'#16a34a',weight:4});
             let meters=0;
             const L=function(p){return[p.lng!==undefined?p.lng:p.getLng(),p.lat!==undefined?p.lat:p.getLat()];};
             for(let i=1;i<pts.length;i++){meters+=hav(L(pts[i-1]),L(pts[i]));}
