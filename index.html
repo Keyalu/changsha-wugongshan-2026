@@ -140,6 +140,17 @@
   .mini-card a{color:var(--teal);font-weight:600;text-decoration:none;border-bottom:1px dotted;}
 
   footer{padding:0 16px 44px;color:var(--sub);font-size:12px;max-width:920px;margin:0 auto;}
+  /* ---------- map ---------- */
+  #tripmap{width:100%;height:64vh;min-height:420px;}
+  .mkt{display:flex;flex-direction:column;align-items:center;font-weight:800;}
+  .mkt .b{width:23px;height:23px;border-radius:50% 50% 50% 4px;background:var(--orange);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;transform:rotate(-45deg);}
+  .mkt .b span{transform:rotate(45deg);}
+  .mkt .t{margin-top:3px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:0 5px;font-size:11px;color:var(--ink);white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.12);}
+  .mapbar{display:flex;gap:6px;align-items:center;margin:10px 0;flex-wrap:wrap;}
+  .mapbar button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 12px;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer;font-family:inherit;}
+  .mapbar button.on{background:var(--orange);border-color:var(--orange);color:#fff;}
+  .lg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--sub);}
+  .lg b{display:inline-block;width:22px;height:0;border-top:3px solid;vertical-align:3px;margin-right:4px;}
   @media (max-width:640px){
     header.top h1{font-size:20px;}
     table{display:block;overflow-x:auto;}
@@ -166,6 +177,7 @@
   <button data-tab="overview" class="on">总览</button>
   <button data-tab="alarms">⏰ 抢票闹钟</button>
   <button data-tab="trip">🗓 每日行程</button>
+  <button data-tab="map">🗺 地图</button>
   <button data-tab="wugong">⛰ 夜爬专区</button>
   <button data-tab="budget">💰 预算</button>
   <button data-tab="food">🍜 美食</button>
@@ -402,6 +414,33 @@
   </div>
 </section>
 
+<!-- ================= 地图 ================= -->
+<section class="panel" id="panel-map">
+  <div class="daynav" id="mapnav">
+    <button data-mday="d1" class="on">D1 · 10/3</button>
+    <button data-mday="d2">D2 · 10/4</button>
+    <button data-mday="d3">D3 · 10/5</button>
+    <button data-mday="d4">D4 · 10/6</button>
+    <button data-mday="d5">D5 · 10/7</button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div id="tripmap"></div>
+  </div>
+  <div class="mapbar">
+    <button id="layerStd" class="on">🗺 标准图</button>
+    <button id="layerSat">🛰 卫星图</button>
+    <span class="hint" style="margin:0;" id="mapHint">市内路线由高德实时规划,高铁/索道为示意线;点标点看说明。D5足浴店未定,定好后自动补线。</span>
+  </div>
+  <div class="lg">
+    <span><b style="border-color:#12897b;"></b>驾车/打车</span>
+    <span><b style="border-color:#4f6bd6;border-top-style:dashed;"></b>地铁/公交</span>
+    <span><b style="border-color:#7a63b5;border-top-style:dashed;"></b>高铁(示意)</span>
+    <span><b style="border-color:#d94f14;"></b>夜爬徒步线</span>
+    <span><b style="border-color:#f4692e;border-top-style:dotted;"></b>索道(示意)</span>
+    <span><b style="border-color:#948676;"></b>步行</span>
+  </div>
+</section>
+
 <!-- ================= 夜爬专区 ================= -->
 <section class="panel" id="panel-wugong">
   <div class="grid">
@@ -503,7 +542,7 @@
 
 <footer class="wrap">
   私人定制行程导览 · 预约规则/价格/班次核验于 2026-09-26,出行前以官方小程序与景区公告为准。<br>
-  来源:长沙本地宝 · 湖南博物院官方通告 · 长沙晚报 · 武功山景区公开信息 · 12306
+  来源:长沙本地宝 · 湖南博物院官方通告 · 长沙晚报 · 武功山景区公开信息 · 12306 · 路线规划与地图底图由高德地图提供
 </footer>
 
 <script>
@@ -513,6 +552,7 @@ function showTab(name){
   tabbar.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.dataset.tab === name); });
   document.querySelectorAll('.panel').forEach(function(p){ p.classList.toggle('on', p.id === 'panel-' + name); });
   try{ localStorage.setItem('cs_trip_tab', name); }catch(e){}
+  if(name === 'map'){ setTimeout(ensureMap, 60); }
 }
 tabbar.addEventListener('click', function(e){
   var b = e.target.closest('button'); if (b) showTab(b.dataset.tab);
@@ -550,6 +590,170 @@ document.querySelectorAll('button.copy').forEach(function(btn){
     } else { fallback(); }
   });
 });
+
+/* ---- map tab (高德) ---- */
+window._AMapSecurityConfig={securityJsCode:"7ad318c0f54f0bd9699421a28074d10b"};
+const MAP_KEY="4b064ce6bffea6df0682fff3cc390388";
+const POI={
+  csnan:[113.06551,28.147093], airport:[113.235474,28.179749], baoli:[112.960501,28.224496],
+  liugoulong:[112.954316,28.221049], yuren:[112.964211,28.228801], juzizhou:[112.961745,28.195918],
+  diaosu:[112.962069,28.18683], yingwan:[112.953795,28.200617], hnda:[112.945185,28.177932],
+  denggao:[112.93961,28.179202], houhu:[112.942899,28.16149], bowuyuan:[112.988349,28.194548],
+  pxbel:[113.839189,27.641495], youkez:[114.129437,27.489023], shigusi:[114.155081,27.466864],
+  zhongxia:[114.1722,27.458082], haohanpo:[114.177981,27.462835], diaomazhuang:[114.180613,27.463126],
+  jinding:[114.178404,27.452146], jindingxiadao:[114.169884,27.452331], zhongxiadao:[114.156079,27.465647]
+};
+const DAYS={
+  d1:{m:[
+      ['csnan','长沙南站','高铁抵达站(备选):地铁2号线→迎宾路口换6号线→六沟垅'],
+      ['airport','黄花机场','飞机抵达备选:磁浮→长沙南再转地铁'],
+      ['baoli','乎然民宿','保利天禧E4栋31层3131 · 房东 19186963252'],
+      ['yuren','渔人码头','湘江边夜宵街:小龙虾、烧烤']],
+    r:[{from:'csnan',to:'baoli',mode:'transit',city:'长沙'},
+       {from:'baoli',to:'yuren',mode:'drive',city:'长沙'}]},
+  d2:{m:[
+      ['baoli','民宿','今天往返都从这里出发'],
+      ['juzizhou','橘子洲','地铁2号线橘子洲站'],
+      ['diaosu','洲头雕像','青年毛泽东艺术雕塑'],
+      ['yingwan','溁湾镇','出洲午饭候选'],
+      ['hnda','湖南大学','校园漫步'],
+      ['denggao','登高路','小吃街:臭豆腐、糖油粑粑'],
+      ['houhu','后湖','艺术区夜景']],
+    r:[{from:'baoli',to:'juzizhou',mode:'transit',city:'长沙'},
+       {from:'juzizhou',to:'diaosu',mode:'walk'},
+       {from:'diaosu',to:'yingwan',mode:'drive',city:'长沙'},
+       {from:'yingwan',to:'baoli',mode:'drive',city:'长沙'},
+       {from:'baoli',to:'hnda',mode:'transit',city:'长沙'},
+       {from:'hnda',to:'denggao',mode:'walk'},
+       {from:'denggao',to:'houhu',mode:'drive',city:'长沙'},
+       {from:'houhu',to:'baoli',mode:'drive',city:'长沙'}]},
+  d3:{m:[
+      ['baoli','民宿','早上退房,行李随身'],
+      ['bowuyuan','湖南博物院','马王堆·辛追夫人 · 6号线烈士公园南站'],
+      ['csnan','长沙南站','高铁 16:30–17:30 发车'],
+      ['pxbel','萍乡北站','约18:00到达'],
+      ['youkez','游客中心','景区大巴/拼车终点'],
+      ['shigusi','石鼓寺','夜爬登山口 · 门票70元'],
+      ['zhongxia','中庵上站','约01:00经过'],
+      ['haohanpo','好汉坡','最陡的一段'],
+      ['diaomazhuang','吊马桩','山脊最后一个岔口'],
+      ['jinding','金顶','日出≈6:15 · 租军大衣']],
+    r:[{from:'baoli',to:'bowuyuan',mode:'transit',city:'长沙'},
+       {from:'bowuyuan',to:'csnan',mode:'drive',city:'长沙'},
+       {from:'csnan',to:'pxbel',mode:'rail'},
+       {from:'pxbel',to:'youkez',mode:'drive',city:'萍乡'},
+       {from:'youkez',to:'shigusi',mode:'drive',city:'萍乡'},
+       {from:'shigusi',to:'jinding',mode:'hike',via:['shigusi','zhongxia','haohanpo','diaomazhuang','jinding']}]},
+  d4:{m:[
+      ['jinding','金顶','看完日出往回走'],
+      ['jindingxiadao','金顶索道下','二级索道下行35元'],
+      ['zhongxia','中庵上站','步行换乘一级索道'],
+      ['zhongxiadao','中庵索道下','一级索道下行50元'],
+      ['youkez','游客中心','拼车/大巴回萍乡北'],
+      ['pxbel','萍乡北站','高铁回长沙'],
+      ['csnan','长沙南','足浴店(待定)后在此过夜']],
+    r:[{from:'jinding',to:'jindingxiadao',mode:'walk'},
+       {from:'jindingxiadao',to:'zhongxia',mode:'cable'},
+       {from:'zhongxia',to:'zhongxiadao',mode:'cable'},
+       {from:'zhongxiadao',to:'youkez',mode:'drive',city:'萍乡'},
+       {from:'youkez',to:'pxbel',mode:'drive',city:'萍乡'},
+       {from:'pxbel',to:'csnan',mode:'rail'}]},
+  d5:{m:[['csnan','长沙南站','足浴店→地铁2号线→长沙南,提前1小时到站']],r:[]}
+};
+let mapObj=null,mapReady=false,curMDay='d1',overlays=[],satLayer=null;
+function ensureMap(){
+  if(mapReady){mapObj.resize();renderDay(curMDay);return;}
+  if(mapObj!==null)return;
+  mapObj=false;
+  const s=document.createElement('script');
+  s.src='https://webapi.amap.com/maps?v=2.0&key='+MAP_KEY;
+  s.onload=initMap;
+  s.onerror=function(){document.getElementById('mapHint').textContent='⚠️ 地图脚本加载失败,请检查网络后刷新重试。';};
+  document.head.appendChild(s);
+}
+function initMap(){
+  mapObj=new AMap.Map('tripmap',{zoom:11,center:[112.99,28.15],mapStyle:'amap://styles/whitesmoke',viewMode:'2D'});
+  mapReady=true;
+  renderDay(curMDay);
+}
+function clearOverlays(){overlays.forEach(function(o){mapObj.remove(o);});overlays=[];}
+function addMarker(coord,n,label,desc){
+  const el=document.createElement('div');
+  el.className='mkt';
+  el.innerHTML='<div class="b"><span>'+n+'</span></div><div class="t">'+label+'</div>';
+  const m=new AMap.Marker({position:coord,content:el,anchor:'bottom-center',zIndex:60});
+  if(desc){
+    m.on('click',function(){
+      new AMap.InfoWindow({content:'<div style="font-size:13px;line-height:1.6;max-width:250px;"><b>'+label+'</b><br>'+desc+'</div>',offset:new AMap.Pixel(0,-4)}).open(mapObj,m.getPosition());
+    });
+  }
+  mapObj.add(m);overlays.push(m);
+}
+function addLine(pts,st){
+  const l=new AMap.Polyline({path:pts,strokeColor:st.color,strokeWeight:st.weight,strokeOpacity:st.opacity!==undefined?st.opacity:.95,strokeStyle:st.dashArray?'dashed':'solid',strokeDashArray:st.dashArray||[10,5],showDir:!!st.dir,isOutline:!!st.outline,outlineColor:'#ffffff',outlineWeight:1,zIndex:40});
+  mapObj.add(l);overlays.push(l);
+}
+function straight(rt){
+  const S={transit:{color:'#4f6bd6',weight:4,dashArray:[10,5]},drive:{color:'#12897b',weight:4},rail:{color:'#7a63b5',weight:4.5,dashArray:[14,8]},walk:{color:'#948676',weight:3,opacity:.8},cable:{color:'#f4692e',weight:3.5,dashArray:[2,7]}}[rt.mode];
+  addLine([POI[rt.from],POI[rt.to]],S);
+}
+function planRoute(rt){
+  return new Promise(function(res){
+    let done=false;const fin=function(v){if(!done){done=true;res(v);}};
+    setTimeout(function(){fin(false);},9000);
+    AMap.plugin(rt.mode==='transit'?'AMap.Transfer':'AMap.Driving',function(){
+      const planner=rt.mode==='transit'?new AMap.Transfer({city:rt.city||'长沙',cityd:rt.city||'长沙'}):new AMap.Driving({policy:0});
+      planner.search(new AMap.LngLat(POI[rt.from][0],POI[rt.from][1]),new AMap.LngLat(POI[rt.to][0],POI[rt.to][1]),function(status,result){
+        try{
+          let pts=[];
+          if(rt.mode==='transit'&&status==='complete'&&result.plans&&result.plans[0]){
+            const p=result.plans[0].path;
+            if(p&&p.length>1){pts=p;}
+          }else if(rt.mode==='drive'&&status==='complete'&&result.routes&&result.routes[0]){
+            const r=result.routes[0];
+            if(r.path&&r.path.length>1){pts=r.path;}
+            else if(r.steps){r.steps.forEach(function(st){(st.path||[]).forEach(function(ll){pts.push(ll);});});}
+          }
+          if(pts.length>1){addLine(pts,rt.mode==='transit'?{color:'#4f6bd6',weight:4,dashArray:[10,5]}:{color:'#12897b',weight:4});return fin(true);}
+        }catch(e){}
+        fin(false);
+      });
+    });
+  });
+}
+async function drawRoute(rt){
+  if(rt.mode==='hike'){
+    addLine(rt.via.map(function(k){return POI[k];}),{color:'#d94f14',weight:6,dir:true,outline:true});
+    return;
+  }
+  if(rt.mode==='rail'||rt.mode==='cable'||rt.mode==='walk'){straight(rt);return;}
+  const ok=await planRoute(rt);
+  if(!ok)straight(rt);
+}
+function renderDay(dk){
+  curMDay=dk;
+  if(!mapReady)return;
+  clearOverlays();
+  const d=DAYS[dk];
+  d.m.forEach(function(mk,i){addMarker(POI[mk[0]],i+1,mk[1],mk[2]);});
+  (d.r||[]).forEach(function(rt){drawRoute(rt);});
+  setTimeout(function(){mapObj.setFitView(null,false,[70,70,70,70],15);},250);
+}
+var mapnav=document.getElementById('mapnav');
+mapnav.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  mapnav.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});
+  renderDay(b.dataset.mday);
+});
+document.getElementById('layerStd').addEventListener('click',function(){setLayer(false);});
+document.getElementById('layerSat').addEventListener('click',function(){setLayer(true);});
+function setLayer(sat){
+  document.getElementById('layerStd').classList.toggle('on',!sat);
+  document.getElementById('layerSat').classList.toggle('on',sat);
+  if(!mapReady)return;
+  if(sat){if(!satLayer){satLayer=new AMap.TileLayer.Satellite();}mapObj.add(satLayer);}
+  else if(satLayer){mapObj.remove(satLayer);}
+}
 
 /* ---- countdowns ---- */
 function fmt(ms){
