@@ -77,6 +77,7 @@
   }
   button.copy:hover{background:#d8eadd;}
   button.copy.ok{background:var(--gold-soft);color:var(--gold);border-color:#e3d5b3;}
+  button.copy.fail{background:var(--red-soft);color:var(--red);border-color:var(--red);}
   .copy-chip{
     display:inline-flex;max-width:100%;overflow:hidden;background:#f1f3f5;
     border:1px solid var(--line);border-radius:7px;padding:3px 9px;font-size:12px;
@@ -368,7 +369,7 @@
     </div>
 
   </div>
-  <p class="hint">💡 口令用法:手机上点「复制口令,跳微信」会自动复制并拉起微信——顶部若弹出口令气泡,点它直达小程序;没弹出就打开微信,在顶部搜索框粘贴口令,点第一个结果。省博也可走公众号「湖南省博物馆」或官网 yuyues.hnmuseum.com。</p>
+  <p class="hint">💡 口令用法:点按钮复制口令,手机会尝试自动打开微信(弹出确认时点「允许」)。<b>最稳的方法:打开微信 → 顶部搜索框 → 粘贴口令 → 点第一个结果</b>直达小程序;也可以把口令发给「文件传输助手」后点开消息卡片。省博还可走公众号「湖南省博物馆」或官网 yuyues.hnmuseum.com。</p>
 </section>
 
 <!-- ================= 每日行程 ================= -->
@@ -732,27 +733,25 @@ function showToast(msg){
 document.querySelectorAll('button.copy').forEach(function(btn){
   btn.addEventListener('click', function(){
     var text = btn.getAttribute('data-copy');
-    function done(){
-      var old = btn.textContent;
-      btn.textContent = '已复制'; btn.classList.add('ok');
-      setTimeout(function(){ btn.textContent = old; btn.classList.remove('ok'); }, 1600);
-      if(text.indexOf('#小程序://')===0){
-        showToast('口令已复制,正在拉起微信…<br>若顶部弹出口令气泡,点它直达;没弹出的话:打开微信 → 顶部搜索框 → 粘贴 → 点第一个结果');
-        if(/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)){
-          setTimeout(function(){ window.location.href = 'weixin://'; }, 450);
-        }
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try{ ok = document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    var old = btn.textContent;
+    btn.textContent = ok ? '已复制' : '复制失败'; btn.classList.add(ok ? 'ok' : 'fail');
+    setTimeout(function(){ btn.textContent = old; btn.classList.remove('ok'); btn.classList.remove('fail'); }, 1600);
+    if(text.indexOf('#小程序://')===0){
+      showToast('口令已复制 → 打开微信 → 顶部搜索框粘贴 → 点第一个结果直达。<br>手机上正在尝试自动打开微信,弹出确认时点「允许」;没弹就按上面的手动步骤,一样快。');
+      if(ok && /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)){
+        var a = document.createElement('a');
+        a.href = 'weixin://'; a.style.display = 'none';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function(){
+          if(document.visibilityState === 'visible'){ window.location.href = 'weixin://'; }
+        }, 1200);
       }
     }
-    function fallback(){
-      var ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try{ document.execCommand('copy'); done(); }catch(e){}
-      document.body.removeChild(ta);
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(done, fallback);
-    } else { fallback(); }
   });
 });
 
